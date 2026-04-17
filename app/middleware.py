@@ -77,8 +77,28 @@ class MetricsMiddleware(BaseHTTPMiddleware):
         
         # =================================================================
         # Placeholder implementation - replace with your code above
-        # =================================================================
-        response = await call_next(request)
+        # =================================================================    
+        start_time = time.time()
+        endpoint = request.url.path
+        method = request.method
+        status = 500
+
+        try:
+            response = await call_next(request)
+            status = response.status_code
+        finally:
+            duration = time.time() - start_time
+            if REQUEST_COUNT is not None:
+                REQUEST_COUNT.labels(
+                    method=method,
+                    endpoint=endpoint,
+                    status=status
+                ).inc()
+            if REQUEST_LATENCY is not None:
+                REQUEST_LATENCY.labels(
+                    method=method,
+                    endpoint=endpoint
+                ).observe(duration)
         return response
 
 

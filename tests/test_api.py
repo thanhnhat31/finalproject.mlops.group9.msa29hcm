@@ -11,10 +11,38 @@ Run tests with:
 import pytest
 from fastapi.testclient import TestClient
 
+import app.main as main_module
 from app.main import app
 
 # Create test client
 client = TestClient(app)
+
+
+class FakeModel:
+    """Simple fake model to keep API tests deterministic."""
+
+    def is_loaded(self):
+        return True
+
+    def predict_with_latency(self, user_id: str, movie_id: str):
+        return 4.2, 12.34
+
+    def get_info(self):
+        return {
+            "version": "test-version",
+            "type": "SVD",
+            "is_loaded": True,
+            "path": "models/svd_model.pkl",
+        }
+
+
+@pytest.fixture(autouse=True)
+def ensure_loaded_model():
+    """Inject fake model for all tests to avoid external model dependency."""
+    original = main_module.model
+    main_module.model = FakeModel()
+    yield
+    main_module.model = original
 
 
 # =============================================================================
@@ -87,7 +115,14 @@ class TestPredictEndpoint:
         # data = response.json()
         # assert "predicted_rating" in data
         # assert 1.0 <= data["predicted_rating"] <= 5.0
-        pass
+        response = client.post(
+            "/predict",
+            json={"user_id": "196", "movie_id": "242"}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "predicted_rating" in data
+        assert 1.0 <= data["predicted_rating"] <= 5.0
     
     # -------------------------------------------------------------------------
     # TODO: Implement test_predict_response_format
@@ -110,7 +145,16 @@ class TestPredictEndpoint:
         # assert "movie_id" in data
         # assert "predicted_rating" in data
         # assert "model_version" in data
-        pass
+        response = client.post(
+            "/predict",
+            json={"user_id": "196", "movie_id": "242"}
+        )
+        data = response.json()
+
+        assert "user_id" in data
+        assert "movie_id" in data
+        assert "predicted_rating" in data
+        assert "model_version" in data
     
     # -------------------------------------------------------------------------
     # TODO: Implement test_predict_missing_user_id
@@ -128,7 +172,11 @@ class TestPredictEndpoint:
         #     json={"movie_id": "242"}  # Missing user_id
         # )
         # assert response.status_code == 422
-        pass
+        response = client.post(
+            "/predict",
+            json={"movie_id": "242"}
+        )
+        assert response.status_code == 422
     
     # -------------------------------------------------------------------------
     # TODO: Implement test_predict_missing_movie_id
@@ -140,7 +188,11 @@ class TestPredictEndpoint:
     def test_predict_missing_movie_id(self):
         """Test prediction with missing movie_id."""
         # TODO: Implement this test
-        pass
+        response = client.post(
+            "/predict",
+            json={"user_id": "196"}
+        )
+        assert response.status_code == 422
     
     # -------------------------------------------------------------------------
     # TODO: Implement test_predict_empty_body
@@ -155,7 +207,8 @@ class TestPredictEndpoint:
         #
         # response = client.post("/predict", json={})
         # assert response.status_code == 422
-        pass
+        response = client.post("/predict", json={})
+        assert response.status_code == 422
 
 
 # =============================================================================
@@ -169,17 +222,31 @@ class TestEdgeCases:
         # The model should still return a prediction (with default rating)
         # or handle gracefully
         # TODO: Implement this test
-        pass
+        response = client.post(
+            "/predict",
+            json={"user_id": "999999", "movie_id": "242"}
+        )
+        assert response.status_code == 200
+        assert 1.0 <= response.json()["predicted_rating"] <= 5.0
     
     def test_predict_unknown_movie(self):
         """Test prediction with unknown movie ID."""
         # TODO: Implement this test
-        pass
+        response = client.post(
+            "/predict",
+            json={"user_id": "196", "movie_id": "999999"}
+        )
+        assert response.status_code == 200
+        assert 1.0 <= response.json()["predicted_rating"] <= 5.0
     
     def test_predict_special_characters_in_id(self):
         """Test prediction with special characters in IDs."""
         # TODO: Implement this test
-        pass
+        response = client.post(
+            "/predict",
+            json={"user_id": " user-196 ", "movie_id": "movie_242"}
+        )
+        assert response.status_code == 200
 
 
 # =============================================================================
@@ -196,7 +263,9 @@ class TestModelInfoEndpoint:
     def test_model_info_contains_version(self):
         """Test that model info contains version."""
         # TODO: Implement this test
-        pass
+        response = client.get("/model/info")
+        data = response.json()
+        assert "version" in data
 
 
 # =============================================================================
@@ -208,12 +277,25 @@ class TestBatchPredictEndpoint:
     def test_batch_predict_multiple_items(self):
         """Test batch prediction with multiple items."""
         # TODO: Implement this test (BONUS)
-        pass
+        response = client.post(
+            "/predict/batch",
+            json={
+                "predictions": [
+                    {"user_id": "196", "movie_id": "242"},
+                    {"user_id": "186", "movie_id": "302"},
+                ]
+            }
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["total_count"] == 2
+        assert len(data["predictions"]) == 2
     
     def test_batch_predict_empty_list(self):
         """Test batch prediction with empty list."""
         # TODO: Implement this test (BONUS)
-        pass
+        response = client.post("/predict/batch", json={"predictions": []})
+        assert response.status_code == 422
 
 
 # =============================================================================

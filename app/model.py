@@ -61,11 +61,15 @@ class MovieRatingModel:
             # Set MODEL_LOADED gauge to 1
             # if MODEL_LOADED is not None:
             #     MODEL_LOADED.set(1)
-            
+            if MODEL_LOADED is not None:
+                MODEL_LOADED.set(1)
+
             # TODO 2: Record the reload timestamp
             # if MODEL_LAST_RELOAD is not None:
             #     MODEL_LAST_RELOAD.set(time.time())
-            
+            if MODEL_LAST_RELOAD is not None:
+                MODEL_LAST_RELOAD.set(time.time())
+
             # TODO 3: Set model info
             # if MODEL_INFO is not None:
             #     MODEL_INFO.info({
@@ -73,6 +77,12 @@ class MovieRatingModel:
             #         'type': 'SVD',
             #         'path': self.model_path
             #     })
+            if MODEL_INFO is not None:
+                MODEL_INFO.info({
+                    'version': self.version,
+                    'type': 'SVD',
+                    'path': self.model_path
+                })
             
         except FileNotFoundError:
             logger.error(f"Model file not found: {self.model_path}")
@@ -80,13 +90,15 @@ class MovieRatingModel:
             # TODO 4: Set MODEL_LOADED to 0 on failure
             # if MODEL_LOADED is not None:
             #     MODEL_LOADED.set(0)
+            if MODEL_LOADED is not None:
+                MODEL_LOADED.set(0)
             
             raise
         except Exception as e:
             logger.error(f"Error loading model: {e}")
             
-            # if MODEL_LOADED is not None:
-            #     MODEL_LOADED.set(0)
+            if MODEL_LOADED is not None:
+                MODEL_LOADED.set(0)
             
             raise
     
@@ -121,14 +133,20 @@ class MovieRatingModel:
             # Record prediction count
             # if PREDICTION_COUNT is not None:
             #     PREDICTION_COUNT.labels(model_version=self.version).inc()
-            
+            if PREDICTION_COUNT is not None:
+                PREDICTION_COUNT.labels(model_version=self.version).inc()
+
             # TODO 7: Record prediction latency
             # if PREDICTION_LATENCY is not None:
             #     PREDICTION_LATENCY.labels(model_version=self.version).observe(duration)
-            
+            if PREDICTION_LATENCY is not None:
+                PREDICTION_LATENCY.labels(model_version=self.version).observe(duration)
+
             # TODO 8: Record prediction value distribution
             # if PREDICTION_VALUE is not None:
             #     PREDICTION_VALUE.labels(model_version=self.version).observe(rating)
+            if PREDICTION_VALUE is not None:
+                PREDICTION_VALUE.labels(model_version=self.version).observe(rating)
             
             return rating
             
@@ -139,6 +157,11 @@ class MovieRatingModel:
             #         error_type='validation_error',
             #         model_version=self.version
             #     ).inc()
+            if PREDICTION_ERRORS is not None:
+                PREDICTION_ERRORS.labels(
+                    error_type='validation_error',
+                    model_version=self.version
+                ).inc()
             raise
             
         except Exception as e:
@@ -148,6 +171,11 @@ class MovieRatingModel:
             #         error_type='unknown_error',
             #         model_version=self.version
             #     ).inc()
+            if PREDICTION_ERRORS is not None:
+                PREDICTION_ERRORS.labels(
+                    error_type='unknown_error',
+                    model_version=self.version
+                ).inc()
             raise
     
     def predict_batch(self, pairs: List[Tuple[str, str]]) -> List[float]:
@@ -166,6 +194,8 @@ class MovieRatingModel:
         # TODO 11 (BONUS): Record batch size
         # if BATCH_SIZE is not None:
         #     BATCH_SIZE.observe(len(pairs))
+        if BATCH_SIZE is not None:
+            BATCH_SIZE.observe(len(pairs))
         
         return [self.predict(user_id, movie_id) for user_id, movie_id in pairs]
     
