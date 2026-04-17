@@ -13,9 +13,9 @@ from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 import logging
 
 from app.config import (
-    API_TITLE, 
-    API_DESCRIPTION, 
-    API_VERSION, 
+    API_TITLE,
+    API_DESCRIPTION,
+    API_VERSION,
     MODEL_VERSION,
     METRICS_ENABLED,
 )
@@ -93,7 +93,11 @@ async def root():
 async def health_check():
     """
     Health check endpoint.
-    
+<<<<<<< HEAD
+
+=======
+
+>>>>>>> 5201525 (feat: Finish model churn & monitoring in dev branch)
     Returns the health status of the API and whether the model is loaded.
     """
     return HealthResponse(
@@ -111,13 +115,21 @@ async def health_check():
 async def metrics():
     """
     Prometheus metrics endpoint.
-    
+<<<<<<< HEAD
+
+=======
+
+>>>>>>> 5201525 (feat: Finish model churn & monitoring in dev branch)
     Returns all collected metrics in Prometheus text format.
     This endpoint should be scraped by Prometheus.
     """
     if not METRICS_ENABLED:
         raise HTTPException(status_code=503, detail="Metrics disabled")
-    
+<< << << < HEAD
+
+== == == =
+
+>>>>>> > 5201525 (feat: Finish model churn & monitoring in dev branch)
     return Response(
         content=generate_latest(),
         media_type=CONTENT_TYPE_LATEST
@@ -143,19 +155,33 @@ async def metrics_info():
 async def predict(request: PredictionRequest):
     """
     Predict movie rating for a user.
-    
+<<<<<<< HEAD
+
     Args:
         request: PredictionRequest with user_id and movie_id
-        
+
+=======
+
+    Args:
+        request: PredictionRequest with user_id and movie_id
+
+>>>>>>> 5201525 (feat: Finish model churn & monitoring in dev branch)
     Returns:
         PredictionResponse with predicted rating and latency
     """
     if model is None or not model.is_loaded():
         raise HTTPException(status_code=503, detail="Model not loaded")
-    
+<< << << < HEAD
+
     try:
         rating, latency_ms = model.predict_with_latency(
-            request.user_id, 
+            request.user_id,
+== == == =
+
+    try:
+        rating, latency_ms=model.predict_with_latency(
+            request.user_id,
+>>>>>> > 5201525 (feat: Finish model churn & monitoring in dev branch)
             request.movie_id
         )
         return PredictionResponse(
@@ -170,27 +196,45 @@ async def predict(request: PredictionRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/predict/batch", response_model=BatchPredictionResponse, tags=["Prediction"])
+@ app.post("/predict/batch", response_model=BatchPredictionResponse, tags=["Prediction"])
 async def predict_batch(request: BatchPredictionRequest):
     """
     Predict movie ratings for multiple user-movie pairs.
-    
+<<<<<<< HEAD
+
     Args:
         request: BatchPredictionRequest with list of predictions
-        
+
+=======
+
+    Args:
+        request: BatchPredictionRequest with list of predictions
+
+>>>>>>> 5201525 (feat: Finish model churn & monitoring in dev branch)
     Returns:
         BatchPredictionResponse with all predicted ratings
     """
     if model is None or not model.is_loaded():
         raise HTTPException(status_code=503, detail="Model not loaded")
-    
+<< << << < HEAD
+
     try:
-        results = []
-        total_latency = 0
-        
+        results=[]
+        total_latency=0
+
         for item in request.predictions:
-            rating, latency_ms = model.predict_with_latency(
-                item.user_id, 
+            rating, latency_ms=model.predict_with_latency(
+                item.user_id,
+== == == =
+
+    try:
+        results=[]
+        total_latency=0
+
+        for item in request.predictions:
+            rating, latency_ms=model.predict_with_latency(
+                item.user_id,
+>>>>>> > 5201525 (feat: Finish model churn & monitoring in dev branch)
                 item.movie_id
             )
             total_latency += latency_ms
@@ -201,9 +245,15 @@ async def predict_batch(request: BatchPredictionRequest):
                 model_version=MODEL_VERSION,
                 latency_ms=round(latency_ms, 3)
             ))
-        
-        avg_latency = total_latency / len(results) if results else 0
-        
+<< << << < HEAD
+
+        avg_latency=total_latency / len(results) if results else 0
+
+== == == =
+
+        avg_latency=total_latency / len(results) if results else 0
+
+>> >>>> > 5201525 (feat: Finish model churn & monitoring in dev branch)
         return BatchPredictionResponse(
             predictions=results,
             total_count=len(results),
@@ -218,7 +268,7 @@ async def predict_batch(request: BatchPredictionRequest):
 # Model Info Endpoint
 # =============================================================================
 
-@app.get("/model/info", tags=["Info"])
+@ app.get("/model/info", tags=["Info"])
 async def model_info():
     """Get information about the loaded model."""
     if model is None:
