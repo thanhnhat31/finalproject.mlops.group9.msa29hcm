@@ -1,3 +1,10 @@
+import pandas as pd
+import joblib
+import time
+import logging
+from typing import Tuple, Dict, Any
+
+from app.config import MODEL_PATH, MODEL_VERSION
 from app.metrics import (
     PREDICTION_COUNT,
     PREDICTION_LATENCY,
@@ -7,27 +14,6 @@ from app.metrics import (
     MODEL_LAST_RELOAD,
     MODEL_INFO
 )
-from app.config import MODEL_PATH, MODEL_VERSION
-from typing import Tuple, Dict, Any
-import joblib
-import pandas as pd
-from app.config import MODEL_PATH, MIN_RATING, MAX_RATING, MODEL_VERSION
-from typing import List, Tuple, Optional
-from pathlib import Path
-import time
-import logging
-import pickle
-<< << << < HEAD
-"""
-ML Model wrapper for movie rating prediction with metrics instrumentation.
-
-TODO: Add metrics instrumentation to the model methods.
-"""
-
-
-== == == =
-
->>>>>> > 5201525 (feat: Finish model churn & monitoring in dev branch)
 
 logger = logging.getLogger(__name__)
 

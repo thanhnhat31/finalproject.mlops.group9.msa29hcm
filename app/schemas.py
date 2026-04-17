@@ -40,56 +40,19 @@ class PredictionRequest(BaseModel):
 
 
 class PredictionResponse(BaseModel):
+    """Response schema for churn prediction."""
 
-
-<< << << < HEAD
-"""Response schema for prediction endpoint."""
-
-user_id: str
-movie_id: str
-predicted_rating: float = Field(..., ge=1.0, le=5.0)
-== == == =
-"""Response schema for churn prediction."""
-
-prediction: str = Field(..., examples=["Churn"])
-churn_probability: float = Field(..., ge=0.0, le=1.0)
->>>>>> > 5201525 (feat: Finish model churn & monitoring in dev branch)
-model_version: str
-latency_ms: Optional[float] = None
+    prediction: str = Field(..., examples=["Churn"])
+    churn_probability: float = Field(..., ge=0.0, le=1.0)
+    model_version: str
+    latency_ms: Optional[float] = None
 
 
 class HealthResponse(BaseModel):
     """Response schema for health check endpoint."""
-
-
-<< << << < HEAD
-
-== == == =
-
->>>>>> > 5201525 (feat: Finish model churn & monitoring in dev branch)
-status: str
-model_loaded: bool
-model_version: str
-
-
-<< << << < HEAD
-
-
-class PredictionItem(BaseModel):
-    """Single prediction item for batch requests."""
-
-    user_id: str = Field(..., min_length=1, max_length=50)
-    movie_id: str = Field(..., min_length=1, max_length=50)
-
-
-class BatchPredictionRequest(BaseModel):
-    """Request schema for batch prediction endpoint."""
-
-    predictions: List[PredictionItem] = Field(...,
-                                              min_length=1, max_length=100)
-
-
-== == == =
+    status: str
+    model_loaded: bool
+    model_version: str
 
 
 class BatchPredictionRequest(BaseModel):
@@ -99,32 +62,15 @@ class BatchPredictionRequest(BaseModel):
         ..., min_length=1, max_length=100)
 
 
->>>>>> > 5201525 (feat: Finish model churn & monitoring in dev branch)
-
-
 class BatchPredictionResponse(BaseModel):
     """Response schema for batch prediction endpoint."""
-
-
-<< << << < HEAD
-
-== == == =
-
->>>>>> > 5201525 (feat: Finish model churn & monitoring in dev branch)
-predictions: List[PredictionResponse]
-total_count: int
-avg_latency_ms: float
+    predictions: List[PredictionResponse]
+    total_count: int
+    avg_latency_ms: float
 
 
 class MetricsInfo(BaseModel):
     """Information about available metrics."""
-
-
-<< << << < HEAD
-
-== == == =
-
->>>>>> > 5201525 (feat: Finish model churn & monitoring in dev branch)
-metrics_enabled: bool
-endpoint: str
-metrics_count: int
+    metrics_enabled: bool
+    endpoint: str
+    metrics_count: int
