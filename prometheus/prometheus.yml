@@ -62,6 +62,16 @@ scrape_configs:
   #   #     target_label: service
   #   #     replacement: movie-rating-api
 
+  - job_name: 'movie-rating-api'
+    static_configs:
+      - targets: ['api:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: movie-rating-api
+
   # ==========================================================================
   # TODO 2: Configure additional services (BONUS)
   # ==========================================================================
