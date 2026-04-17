@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  IMAGE_NAME: nhatmsa/finalprojectmlops
+  IMAGE_NAME: nhatqkit/finalprojectmlops
 
 jobs:
   quality:
@@ -87,6 +87,6 @@ jobs:
           SHORT_SHA="${GITHUB_SHA:0:7}"
           echo "## Backend CI Artifact" >> "$GITHUB_STEP_SUMMARY"
           echo "- Branch: \`release\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Image: \`nhatmsa/finalprojectmlops:sha-${SHORT_SHA}\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Floating tag: \`nhatmsa/finalprojectmlops:release\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Local pull command: \`docker pull nhatmsa/finalprojectmlops:release\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Image: \`nhatqkit/finalprojectmlops:sha-${SHORT_SHA}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Floating tag: \`nhatqkit/finalprojectmlops:release\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Local pull command: \`docker pull nhatqkit/finalprojectmlops:release\`" >> "$GITHUB_STEP_SUMMARY"
