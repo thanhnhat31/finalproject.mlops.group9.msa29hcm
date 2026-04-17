@@ -33,9 +33,17 @@
     "",
     "TODO 7: Create a 'Model Info' panel",
     "  - Type: Table",
-    "  - Query: ml_model_info"
+    "  - Query: ml_model_info",
+    "",
+    "HOW TO CREATE:",
+    "1. Open Grafana at http://localhost:3000",
+    "2. Create new dashboard",
+    "3. Add panels with the queries above",
+    "4. Export dashboard JSON and save here"
   ],
-  "annotations": {"list": []},
+  "annotations": {
+    "list": []
+  },
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
