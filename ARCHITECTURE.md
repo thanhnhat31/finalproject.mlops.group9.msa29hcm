@@ -45,4 +45,10 @@ The data flow within the system is architected around three distinct pipelines t
 ![Data Flow Sequence](./document/data_flow_sequence.svg)
 
 ## Tech Stack
-
+*   **Programming Language:** Python
+*   **Web Framework:** FastAPI
+*   **Machine Learning:** Scikit-learn
+*   **Monitoring:** Prometheus
+*   **Visualization:** Grafana
+*   **Containerization:** Docker
+*   **CICD:** GitHub Actions
