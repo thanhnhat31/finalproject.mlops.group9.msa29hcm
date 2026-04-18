@@ -23,7 +23,7 @@ services:
   # ===========================================================================
   api:
     build: .
-    container_name: movie-rating-api
+    container_name: churn-api
     ports:
       - "8000:8000"
     volumes:

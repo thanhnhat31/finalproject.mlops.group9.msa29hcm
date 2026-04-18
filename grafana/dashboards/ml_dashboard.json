@@ -61,11 +61,11 @@
     },
     {
       "id": 2,
-      "title": "Average Prediction (P50)",
+      "title": "Average Prediction",
       "type": "gauge",
       "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
-      "targets": [{"expr": "histogram_quantile(0.5, sum by (le) (rate(ml_prediction_value_bucket[5m])))", "refId": "A"}],
-      "fieldConfig": {"defaults": {"min": 1, "max": 5, "unit": "none"}, "overrides": []}
+      "targets": [{"expr": "(sum(rate(ml_prediction_probability_sum[5m])) / clamp_min(sum(rate(ml_prediction_probability_count[5m])), 0.001)) or vector(0)", "refId": "A"}],
+      "fieldConfig": {"defaults": {"min": 0, "max": 1, "unit": "percentunit"}, "overrides": []}
     },
     {
       "id": 3,
@@ -80,7 +80,7 @@
       "title": "Prediction Errors",
       "type": "stat",
       "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
-      "targets": [{"expr": "sum(rate(ml_prediction_errors_total[5m]))", "refId": "A"}],
+      "targets": [{"expr": "sum(rate(ml_prediction_errors_total[5m])) or vector(0)", "refId": "A"}],
       "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []}
     },
     {
@@ -108,16 +108,16 @@
       "title": "Prediction Value Distribution",
       "type": "timeseries",
       "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
-      "targets": [{"expr": "sum by (le) (rate(ml_prediction_value_bucket[5m]))", "legendFormat": "<= {{le}}", "refId": "A"}],
+      "targets": [{"expr": "sum by (le) (rate(ml_prediction_probability_bucket[5m]))", "legendFormat": "<= {{le}}", "refId": "A"}],
       "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []}
     },
     {
       "id": 8,
-      "title": "Prediction Errors by Type",
-      "type": "timeseries",
+      "title": "Prediction Errors (5m)",
+      "type": "stat",
       "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
-      "targets": [{"expr": "sum by (error_type) (rate(ml_prediction_errors_total[5m]))", "legendFormat": "{{error_type}}", "refId": "A"}],
-      "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []}
+      "targets": [{"expr": "sum(rate(ml_prediction_errors_total[5m])) or vector(0)", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "reqps", "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "orange", "value": 0.01}, {"color": "red", "value": 0.05}]}}, "overrides": []}
     }
   ],
   "refresh": "10s",
@@ -130,6 +130,6 @@
   "timezone": "",
   "title": "ML Metrics Dashboard",
   "uid": "ml-metrics",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }

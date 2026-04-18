@@ -153,7 +153,7 @@ async def predict(request: PredictionRequest):
 
         return PredictionResponse(
             churn_probability=prediction_results["probability"],
-            churn_prediction=prediction_results["prediction"],
+            prediction="Churn" if prediction_results["prediction"] == 1 else "No Churn",
             model_version=MODEL_VERSION,
             latency_ms=round(prediction_results["latency_ms"], 3)
         )
