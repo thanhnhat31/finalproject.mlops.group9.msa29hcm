@@ -60,7 +60,20 @@ finalproject.mlops.group9.msa29hcm/
 ### 1. Clone and Setup
 
 ```bash
-docker compose up -d --build
+# Clone repository
+git clone https://github.com/thanhnhat31/finalproject.mlops.group9.msa29hcm.git
+cd finalproject.mlops.group9.msa29hcm
+
+# Create virtual environment
+python -m venv venv
+# Activate virtual environment
+# Windows
+venv\Scripts\activate
+# macOS/Linux
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
 Services:
@@ -85,9 +98,31 @@ Expected:
 ### 3.4 Sample Prediction
 
 ```bash
-curl -X POST http://localhost:8000/predict \
-  -H "Content-Type: application/json" \
-  -d '{"user_id":"196"}'
+curl -X 'POST' \
+  'http://localhost:8000/predict' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "gender": "Female",
+  "SeniorCitizen": 0,
+  "Partner": "Yes",
+  "Dependents": "No",
+  "tenure": 1,
+  "PhoneService": "No",
+  "MultipleLines": "No phone service",
+  "InternetService": "DSL",
+  "OnlineSecurity": "No",
+  "OnlineBackup": "Yes",
+  "DeviceProtection": "No",
+  "TechSupport": "No",
+  "StreamingTV": "No",
+  "StreamingMovies": "No",
+  "Contract": "Month-to-month",
+  "PaperlessBilling": "Yes",
+  "PaymentMethod": "Electronic check",
+  "MonthlyCharges": 29.85,
+  "TotalCharges": 29.85
+}'
 ```
 
 ## 4. Testing
