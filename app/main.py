@@ -1,8 +1,8 @@
 """
-FastAPI application for Movie Rating Prediction with Prometheus Monitoring.
+FastAPI application for Customer Churn Prediction with Prometheus Monitoring.
 
 This application exposes:
-- /predict - Make predictions
+- /predict - Make churn predictions
 - /health - Health check
 - /metrics - Prometheus metrics endpoint
 """
@@ -13,19 +13,17 @@ from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 import logging
 
 from app.config import (
-    API_TITLE, 
-    API_DESCRIPTION, 
-    API_VERSION, 
+    API_TITLE,
+    API_DESCRIPTION,
+    API_VERSION,
     MODEL_VERSION,
     METRICS_ENABLED,
 )
-from app.model import MovieRatingModel
+from app.model import CustomerChurnModel
 from app.schemas import (
     PredictionRequest,
     PredictionResponse,
     HealthResponse,
-    BatchPredictionRequest,
-    BatchPredictionResponse,
     MetricsInfo,
 )
 from app.middleware import MetricsMiddleware
@@ -56,7 +54,7 @@ if METRICS_ENABLED:
     app.add_middleware(MetricsMiddleware)
 
 # Global model instance
-model: MovieRatingModel = None
+model: CustomerChurnModel = None
 
 
 @app.on_event("startup")
@@ -64,8 +62,8 @@ async def startup_event():
     """Load model when application starts."""
     global model
     try:
-        model = MovieRatingModel()
-        logger.info("Model loaded successfully at startup")
+        model = CustomerChurnModel()
+        logger.info("Churn Model loaded successfully at startup")
     except Exception as e:
         logger.error(f"Failed to load model: {e}")
 
@@ -93,7 +91,6 @@ async def root():
 async def health_check():
     """
     Health check endpoint.
-    
     Returns the health status of the API and whether the model is loaded.
     """
     return HealthResponse(
@@ -111,13 +108,10 @@ async def health_check():
 async def metrics():
     """
     Prometheus metrics endpoint.
-    
     Returns all collected metrics in Prometheus text format.
-    This endpoint should be scraped by Prometheus.
     """
     if not METRICS_ENABLED:
         raise HTTPException(status_code=503, detail="Metrics disabled")
-    
     return Response(
         content=generate_latest(),
         media_type=CONTENT_TYPE_LATEST
@@ -142,75 +136,29 @@ async def metrics_info():
 @app.post("/predict", response_model=PredictionResponse, tags=["Prediction"])
 async def predict(request: PredictionRequest):
     """
-    Predict movie rating for a user.
-    
+    Predict customer churn.
+
     Args:
-        request: PredictionRequest with user_id and movie_id
-        
+        request: PredictionRequest with customer features
+
     Returns:
-        PredictionResponse with predicted rating and latency
+        PredictionResponse with churn probability and status
     """
     if model is None or not model.is_loaded():
         raise HTTPException(status_code=503, detail="Model not loaded")
-    
+
     try:
-        rating, latency_ms = model.predict_with_latency(
-            request.user_id, 
-            request.movie_id
-        )
+        # Thực hiện dự đoán từ dữ liệu đầu vào (request.dict() hoặc request.model_dump())
+        prediction_results = model.predict(request)
+
         return PredictionResponse(
-            user_id=request.user_id,
-            movie_id=request.movie_id,
-            predicted_rating=rating,
+            churn_probability=prediction_results["probability"],
+            churn_prediction=prediction_results["prediction"],
             model_version=MODEL_VERSION,
-            latency_ms=round(latency_ms, 3)
+            latency_ms=round(prediction_results["latency_ms"], 3)
         )
     except Exception as e:
         logger.error(f"Prediction error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/predict/batch", response_model=BatchPredictionResponse, tags=["Prediction"])
-async def predict_batch(request: BatchPredictionRequest):
-    """
-    Predict movie ratings for multiple user-movie pairs.
-    
-    Args:
-        request: BatchPredictionRequest with list of predictions
-        
-    Returns:
-        BatchPredictionResponse with all predicted ratings
-    """
-    if model is None or not model.is_loaded():
-        raise HTTPException(status_code=503, detail="Model not loaded")
-    
-    try:
-        results = []
-        total_latency = 0
-        
-        for item in request.predictions:
-            rating, latency_ms = model.predict_with_latency(
-                item.user_id, 
-                item.movie_id
-            )
-            total_latency += latency_ms
-            results.append(PredictionResponse(
-                user_id=item.user_id,
-                movie_id=item.movie_id,
-                predicted_rating=rating,
-                model_version=MODEL_VERSION,
-                latency_ms=round(latency_ms, 3)
-            ))
-        
-        avg_latency = total_latency / len(results) if results else 0
-        
-        return BatchPredictionResponse(
-            predictions=results,
-            total_count=len(results),
-            avg_latency_ms=round(avg_latency, 3)
-        )
-    except Exception as e:
-        logger.error(f"Batch prediction error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -224,7 +172,7 @@ async def model_info():
     if model is None:
         return {
             "model_version": MODEL_VERSION,
-            "model_type": "SVD (Collaborative Filtering)",
+            "model_type": "Classification (Churn Prediction)",
             "is_loaded": False,
         }
     return model.get_info()
