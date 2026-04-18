@@ -1,6 +1,4 @@
-# AI in Production - Final project - Group 9
-
-## Overview
+﻿# AI in Production Final Project - Group 9
 
 This repository contains the Final Project for the **AI in Production** course (Group 9). The project implements an end-to-end Machine Learning system designed to predict user churn in real-time. It follows modern MLOps best practices by separating development (offline) from production (online) environments while ensuring high system reliability through a dedicated observability stack.
 
@@ -14,7 +12,7 @@ This repository contains the Final Project for the **AI in Production** course (
 
 ## Project Structure
 
-```
+```text
 finalproject.mlops.group9.msa29hcm/
 ├── app/
 │   ├── __init__.py
@@ -61,56 +59,70 @@ finalproject.mlops.group9.msa29hcm/
 ### 1. Clone and Setup
 
 ```bash
-# Clone source code
-git clone https://github.com/your-username/finalproject.mlops.group9.msa29hcm.git
-cd finalproject.mlops.group9.msa29hcm
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-
-# Install dependencies
-pip install -r requirements.txt
+docker compose up -d --build
 ```
 
-### 2. Train Model (if not exists)
+Services:
+- API: `http://localhost:8000`
+- API docs: `http://localhost:8000/docs`
+- Metrics: `http://localhost:8000/metrics`
+- Prometheus: `http://localhost:9090`
+- Grafana: `http://localhost:3000` (admin/admin)
+
+### 3.3 Verify Model Loaded
 
 ```bash
-python scripts/train_model.py
-```
-
-### 3. Run the API
-
-```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### 4. Test the API
-
-```bash
-# Health check
 curl http://localhost:8000/health
-
-# Predict
-curl -X POST "http://localhost:8000/predict" \
-  -H "Content-Type: application/json" \
-  -d '{"user_id": "196", "movie_id": "242"}'
 ```
 
-### 5. Run with Docker
+Expected:
+
+```json
+{"status":"healthy","model_loaded":true,"model_version":"1.0.0"}
+```
+
+### 3.4 Sample Prediction
 
 ```bash
-docker-compose up -d
+curl -X POST http://localhost:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"196","movie_id":"242"}'
 ```
 
-### 6. API Endpoints
+## 4. Testing
 
-| Service    | Method | URL                           | Credentials |
-| ---------- | ------ | ----------------------------- | ----------- |
-| API        | POST   | http://localhost:8000/predict | -           |
-| Health     | GET    | http://localhost:8000/health  | -           |
-| API Docs   | GET    | http://localhost:8000/docs    | -           |
-| Metrics    | GET    | http://localhost:8000/metrics | -           |
-| Prometheus | GET    | http://localhost:9090         | -           |
-| Grafana    | GET    | http://localhost:3000         | admin/admin |
+Run tests in local Python environment:
 
+```bash
+python -m pytest tests/ -v --maxfail=1
+```
+
+If local Python is 3.13 and dependency issues occur, run tests in CI or use Python 3.10 virtual environment.
+
+## 5. CI Workflow
+
+Workflow file: `.github/workflows/CICD.yml`
+
+Trigger policy:
+- Push on `staging` or `main`: run test
+- Pull request:
+  - `dev -> staging`: run test + build image with `staging` tag
+  - `staging -> main`: run test + build image with `main` tag
+
+Image naming base:
+- `nhatqkit/finalprojectmlops`
+
+## 6. Documentation Index
+
+- Architecture: `ARCHITECTURE.md`
+- Team process and roles: `CONTRIBUTING.md`
+- Responsible AI plan: `RESPONSIBLE_AI.md`
+
+## 7. Notes
+
+- `models/svd_model.pkl` is required for healthy prediction service.
+- If you see `Model not loaded`, verify model file exists and restart API container:
+
+```bash
+docker compose restart api
+```
