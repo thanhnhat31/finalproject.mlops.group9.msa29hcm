@@ -52,3 +52,5 @@ The data flow within the system is architected around three distinct pipelines t
 *   **Visualization:** Grafana
 *   **Containerization:** Docker
 *   **CICD:** GitHub Actions
+*   **Testing:** Pytest
+*   **Documentation:** Markdown, PlantUML, Draw.io
