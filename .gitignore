@@ -25,7 +25,7 @@ build/
 htmlcov/
 
 # Models (large files)
-models/*.pkl
+#models/*.pkl
 !models/.gitkeep
 
 # Data

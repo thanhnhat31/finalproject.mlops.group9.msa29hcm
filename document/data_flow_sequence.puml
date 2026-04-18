@@ -1,0 +1,78 @@
+@startuml
+skinparam maxMessageSize 100
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+title AI in Production - Final project - Group 9 - Data Flow
+
+actor "User" as user
+
+box "Offline Pipeline" #EBF5FB
+participant "Raw Data" as raw_data
+participant "Data Processing\n(train_model.py)" as data_proc
+participant "Model Training\n(train_model.py)" as training
+end box
+
+box "Storage" #EAFAF1
+database "Local Volume\n(./models)" as storage
+end box
+
+box "Online Serving" #FCF3CF
+participant "API Endpoints\n(main.py)" as api
+participant "Inference Engine\n(model.py)" as engine
+participant "Instrumentation\n(metrics.py)" as instr
+end box
+
+box "Observability Stack" #FDFEFE
+participant "Prometheus" as prometheus
+participant "Grafana" as grafana
+end box
+
+== 1. Offline Training Phase ==
+raw_data -> data_proc: Read historical data
+activate data_proc
+data_proc -> data_proc: Clean & engineer features
+data_proc -> training: Pass processed data
+deactivate data_proc
+activate training
+training -> training: Train ML model
+training -> storage: Save trained model (.pkl)
+deactivate training
+
+
+== 2. Application Startup ==
+engine -> storage: Request model loading
+activate storage
+activate engine
+storage --> engine: Model loaded in RAM
+deactivate engine
+deactivate storage
+
+== 3. Online Prediction (Real-time) ==
+user -> api: POST /predict\n(Request Data)
+activate api
+api -> engine: Trigger predict(features)
+activate engine
+engine -> engine: Execute inference
+engine --> api: Return prediction results
+deactivate engine
+api --> user: Return Response JSON
+deactivate api
+
+== 4. Observability & Monitoring ==
+api -> instr: Intercept API metrics\n(latency, errors)
+activate instr
+engine -> instr: Record ML metrics\n(predictions, count)
+prometheus -> instr: Scrape metrics via /metrics
+activate prometheus
+instr --> prometheus: Return metrics time-series
+deactivate instr
+prometheus -> grafana: Act as Data Source
+deactivate prometheus
+activate grafana
+user -> grafana: Access Dashboard to\nadministrate & monitor
+
+grafana --> user: Render UI
+deactivate grafana
+
+@enduml
