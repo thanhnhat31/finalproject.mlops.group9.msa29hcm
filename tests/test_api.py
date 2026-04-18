@@ -16,6 +16,7 @@ from app.main import app
 
 # Create test client
 client = TestClient(app)
+VALID_PAYLOAD = {"user_id": "user_196", "movie_id": "movie_242"}
 
 
 class FakeModel:
@@ -117,9 +118,9 @@ class TestPredictEndpoint:
         # assert 1.0 <= data["predicted_rating"] <= 5.0
         response = client.post(
             "/predict",
-            json={"user_id": "196", "movie_id": "242"}
+            json=VALID_PAYLOAD
         )
-        assert response.status_code == 200
+        assert response.status_code == 200, response.text
         data = response.json()
         assert "predicted_rating" in data
         assert 1.0 <= data["predicted_rating"] <= 5.0
@@ -147,8 +148,9 @@ class TestPredictEndpoint:
         # assert "model_version" in data
         response = client.post(
             "/predict",
-            json={"user_id": "196", "movie_id": "242"}
+            json=VALID_PAYLOAD
         )
+        assert response.status_code == 200, response.text
         data = response.json()
 
         assert "user_id" in data
@@ -224,9 +226,9 @@ class TestEdgeCases:
         # TODO: Implement this test
         response = client.post(
             "/predict",
-            json={"user_id": "999999", "movie_id": "242"}
+            json={"user_id": "unknown_user_999999", "movie_id": "movie_242"}
         )
-        assert response.status_code == 200
+        assert response.status_code == 200, response.text
         assert 1.0 <= response.json()["predicted_rating"] <= 5.0
     
     def test_predict_unknown_movie(self):
@@ -234,9 +236,9 @@ class TestEdgeCases:
         # TODO: Implement this test
         response = client.post(
             "/predict",
-            json={"user_id": "196", "movie_id": "999999"}
+            json={"user_id": "user_196", "movie_id": "unknown_movie_999999"}
         )
-        assert response.status_code == 200
+        assert response.status_code == 200, response.text
         assert 1.0 <= response.json()["predicted_rating"] <= 5.0
     
     def test_predict_special_characters_in_id(self):
@@ -281,12 +283,12 @@ class TestBatchPredictEndpoint:
             "/predict/batch",
             json={
                 "predictions": [
-                    {"user_id": "196", "movie_id": "242"},
-                    {"user_id": "186", "movie_id": "302"},
+                    {"user_id": "user_196", "movie_id": "movie_242"},
+                    {"user_id": "user_186", "movie_id": "movie_302"},
                 ]
             }
         )
-        assert response.status_code == 200
+        assert response.status_code == 200, response.text
         data = response.json()
         assert data["total_count"] == 2
         assert len(data["predictions"]) == 2
