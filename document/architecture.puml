@@ -44,6 +44,11 @@ node "Observability Stack" <<Docker Containers>> {
 }
 
 ' ==========================================
+' EXTERNAL ACTORS
+' ==========================================
+actor "User" as User
+
+' ==========================================
 ' RELATIONS
 ' ==========================================
 
@@ -55,7 +60,7 @@ Model_Training -> Model_Registry : Saves model (.pkl)
 ' Online Flow
 Model_Registry ..> Inference_Engine : Loads to RAM\n(on startup)
 API_Endpoint -> Inference_Engine : Triggers predict()
-' Client -> API_Endpoint : POST /predict (Real-time)
+User --> API_Endpoint : Access API Endpoint\nto query predict
 
 ' Instrumentation Internal Flow
 API_Endpoint -right-> Instrumentation : Intercepts\n(API Metrics)
@@ -64,5 +69,6 @@ Inference_Engine -right-> Instrumentation : Records\n(ML Metrics)
 ' Observability Flow
 Instrumentation --> Prometheus : Scraped via /metrics
 Prometheus -right-> Grafana : Data Source
+User --> Grafana : Access Dashboard to\nadministrate & monitor system
 
 @enduml
