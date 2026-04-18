@@ -11,11 +11,11 @@
 ## Task List
 | No  | Task                              | Assignee | Status      |
 | --- | --------------------------------- | -------- | ----------- |
-| 1   | Problem Definition & Requirements | Thanh    | In Progress |
-| 2   | System Design & Architecture      | Thanh    | In Progress |
-| 3   | ML Pipeline                       | Như      | Not Started |
-| 4   | Deployment                        | Như      | Not Started |
-| 5   | Monitoring                        | Nhật     | Not Started |
-| 6   | Testing & CI/CD                   | Nhật     | Not Started |
-| 7   | Responsible AI                    | Nhật     | Not Started |
-| 8   | Documentation                     | Thanh    | Not Started |
+| 1   | Problem Definition & Requirements | Thanh    | Done        |
+| 2   | System Design & Architecture      | Thanh    | Done        |
+| 3   | ML Pipeline                       | Như      | In Progress |
+| 4   | Deployment                        | Như      | In Progress |
+| 5   | Monitoring                        | Nhật     | In Progress |
+| 6   | Testing & CI/CD                   | Nhật     | In Progress |
+| 7   | Responsible AI                    | Nhật     | In Progress |
+| 8   | Documentation                     | Thanh    | In Progress |
