@@ -27,9 +27,22 @@ The system is designed as a monolithic Machine Learning Application consisting o
 ![System Architecture](./document/architecture.svg)
 
 
+## II. Data Flow
 
-## Data Flow
+### 2.1. Overview
 
+The data flow within the system is architected around three distinct pipelines to cleanly separate model development, real-time inference, and system monitoring:
 
-## Tech Decisions & Trade-offs
+1. **Training Flow (Offline):** Extracted historical `Raw Data` undergoes preprocessing to generate training features. The Machine Learning model is trained on these features and the final model artifacts are serialized and stored securely in the `Model Registry` (Local Volume).
+2. **Serving Flow (Online):** When the FastAPI container starts, it loads the serialized model from the volume directly into RAM. End Users send real-time `POST /predict` requests containing fresh features. The API routes these to the Inference Engine, which processes them and instantly returns a prediction response.
+3. **Observability Flow:** During online operations, the `Instrumentation` module continuously tracks both API-level metrics (e.g., latency, HTTP errors) and ML-level metrics (e.g., prediction distributions). `Prometheus` periodically scrapes this data into its Time-Series Database, feeding it to `Grafana` where Administrative Users can monitor system health interactively.
+### 2.2. Data Flow Diagram
+
+![Data Flow Diagram](./document/data_flow_diagram.svg)
+
+### 2.3. Data Flow Sequence
+
+![Data Flow Sequence](./document/data_flow_sequence.svg)
+
+## Tech Stack
 
