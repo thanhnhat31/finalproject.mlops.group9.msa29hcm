@@ -87,6 +87,31 @@ class CustomerChurnModel:
             logger.error(f"Prediction error: {e}")
             raise e
 
+    def predict(self, request_data: Any) -> Dict[str, Any]:
+        """
+        Compatibility adapter used by the FastAPI endpoint.
+
+        Accepts either:
+        - Pydantic model instance (has .model_dump() or .dict())
+        - plain dict payload
+        """
+        if hasattr(request_data, "model_dump"):
+            input_data = request_data.model_dump()
+        elif hasattr(request_data, "dict"):
+            input_data = request_data.dict()
+        elif isinstance(request_data, dict):
+            input_data = request_data
+        else:
+            raise ValueError("Unsupported request data format")
+
+        prediction_label, probability, latency_ms = self.predict_with_latency(input_data)
+        churn_prediction = 1 if prediction_label == "Churn" else 0
+        return {
+            "prediction": churn_prediction,
+            "probability": probability,
+            "latency_ms": latency_ms,
+        }
+
     def get_info(self) -> Dict[str, Any]:
         return {
             "model_version": self.version,
