@@ -1,90 +1,54 @@
-﻿# System Architecture
+# AI in Production - Final project - Group 9
 
-## 1. Objective
+## I. System Architecture
 
-Deliver a production-style ML service with monitoring, testing, and CI controls.
+### 1.1. System Overview
 
-## 2. Logical Architecture
+#### 1.1.1. Internal Components
+The system is designed as a monolithic Machine Learning Application consisting of an offline training pipeline, a real-time online serving API, and an observability stack.
 
-```text
-Client
-  |
-  v
-FastAPI Service (app/main.py)
-  |- Request validation (app/schemas.py)
-  |- Metrics middleware (app/middleware.py)
-  |- Prediction service (app/model.py)
-  |    |- Load model artifact: models/svd_model.pkl
-  |    |- Emit ML metrics
-  |
-  v
-Prometheus (/metrics scrape)
-  |
-  v
-Grafana dashboards + alert visualization
-```
+*   **Offline Training Pipeline (Local Scripts):** Reads `Raw Data`, processes features (`Data Processing`), and trains the model (`Model Training`) using `train_model.py`.
+*   **Model Registry (Local Storage):** The trained model is saved as a `.pkl` file to a local volume (`./models`).
+*   **Online Serving (FastAPI Container):** 
+    *   **API Endpoints (`main.py`):** Exposes REST API endpoints to receive real-time prediction requests.
+    *   **Inference Engine (`model.py`):** Loads the model into RAM on startup and generates predictions when triggered.
+    *   **Instrumentation (`metrics.py` & middleware):** Intercepts API requests to record API metrics and captures ML metrics from the inference engine.
+*   **Observability Stack (Docker Containers):** 
+    *   **Prometheus:** Scrapes metrics from the FastAPI application via the `/metrics` endpoint.
+    *   **Grafana:** Acts as a dashboard for metric visualization utilizing Prometheus as its data source.
 
-## 3. Runtime Components
+#### 1.1.2. External Actors
+*   **User:**
+    *   Accesses the **API Endpoint** (e.g., via `POST /predict`) to query predictions.
+    *   Accesses the **Grafana Dashboard** to administrate and monitor system health and metrics.
+  
+### 1.2. System Architecture
 
-- API container
-  - Exposes `8000`
-  - Serves prediction and metrics endpoint
-- Prometheus container
-  - Exposes `9090`
-  - Scrapes API metrics every configured interval
-  - Evaluates alert rules from `prometheus/alerts/*.yml`
-- Grafana container
-  - Exposes `3000`
-  - Uses provisioned Prometheus datasource
-  - Loads dashboards from `grafana/dashboards/`
+![System Architecture](./document/architecture.svg)
 
-## 4. Data and Control Flow
 
-### 4.1 Prediction Flow
+## II. Data Flow
 
-1. Client sends `POST /predict` payload with `user_id` and `movie_id`.
-2. FastAPI validates schema.
-3. `MovieRatingModel` predicts score.
-4. API returns response with rating and latency.
+### 2.1. Overview
 
-### 4.2 Monitoring Flow
+The data flow within the system is architected around three distinct pipelines to cleanly separate model development, real-time inference, and system monitoring:
 
-1. Middleware records HTTP metrics.
-2. Model layer records ML metrics.
-3. Prometheus scrapes `/metrics`.
-4. Grafana visualizes time series.
-5. Alert rules trigger on thresholds.
+1. **Training Flow (Offline):** Extracted historical `Raw Data` undergoes preprocessing to generate training features. The Machine Learning model is trained on these features and the final model artifacts are serialized and stored securely in the `Model Registry` (Local Volume).
+2. **Serving Flow (Online):** When the FastAPI container starts, it loads the serialized model from the volume directly into RAM. End Users send real-time `POST /predict` requests containing fresh features. The API routes these to the Inference Engine, which processes them and instantly returns a prediction response.
+3. **Observability Flow:** During online operations, the `Instrumentation` module continuously tracks both API-level metrics (e.g., latency, HTTP errors) and ML-level metrics (e.g., prediction distributions). `Prometheus` periodically scrapes this data into its Time-Series Database, feeding it to `Grafana` where Administrative Users can monitor system health interactively.
+### 2.2. Data Flow Diagram
 
-## 5. Observability Coverage
+![Data Flow Diagram](./document/data_flow_diagram.svg)
 
-HTTP metrics:
-- `http_requests_total`
-- `http_request_duration_seconds`
+### 2.3. Data Flow Sequence
 
-ML metrics:
-- `ml_predictions_total`
-- `ml_prediction_duration_seconds`
-- `ml_prediction_value`
-- `ml_prediction_errors_total`
-- `ml_model_loaded`
-- `ml_model_last_reload_timestamp`
+![Data Flow Sequence](./document/data_flow_sequence.svg)
 
-## 6. Deployment Topology
-
-Deployment is containerized using `docker-compose.yml` in a single host setup.
-
-- Shared Docker network: `monitoring`
-- Persistent volumes:
-  - `prometheus_data`
-  - `grafana_data`
-- Model volume mount:
-  - `./models:/app/models`
-
-## 7. Risk and Mitigation
-
-- Risk: model artifact missing or incompatible
-  - Mitigation: startup health check + `ml_model_loaded` metric + alert
-- Risk: API latency degradation
-  - Mitigation: latency histogram + `HighLatency` alert
-- Risk: low traffic or prediction failure spikes
-  - Mitigation: volume and error-rate alerts
+## Tech Stack
+*   **Programming Language:** Python
+*   **Web Framework:** FastAPI
+*   **Machine Learning:** Scikit-learn
+*   **Monitoring:** Prometheus
+*   **Visualization:** Grafana
+*   **Containerization:** Docker
+*   **CICD:** GitHub Actions
