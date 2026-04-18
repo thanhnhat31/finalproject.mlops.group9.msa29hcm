@@ -1,15 +1,16 @@
 # AI in Production - Final project - Group 9
 
-
 ## Overview
 
-=======
-# Lab 4: Monitoring & Production Deployment
+This repository contains the Final Project for the **AI in Production** course (Group 9). The project implements an end-to-end Machine Learning system designed to predict user churn in real-time. It follows modern MLOps best practices by separating development (offline) from production (online) environments while ensuring high system reliability through a dedicated observability stack.
 
-## Overview
-
-Implement comprehensive monitoring and observability for the movie rating prediction system using Prometheus for metrics collection and Grafana for visualization.
->>>>>>> 5201525 (feat: Finish model churn & monitoring in dev branch)
+### Key Features:
+*   **Real-time Prediction:** A FastAPI-based inference engine that provides instant churn probabilities for active users.
+*   **Offline Development Pipeline:** Automated scripts for data preprocessing and model training to ensure reproducible results.
+*   **Full Observability Stack:** Integrated **Prometheus** and **Grafana** for monitoring both system health (latency, throughput) and ML-specific performance (prediction distribution, model drift).
+*   **Production Ready:** Deployment-ready configuration using **Docker Compose** for seamless orchestration of the API and monitoring services.
+*   **CI/CD:** Automated testing and deployment pipeline using GitHub Actions.
+*   **Responsible AI:** Implementation of fairness and bias detection mechanisms.
 
 ## Project Structure
 
