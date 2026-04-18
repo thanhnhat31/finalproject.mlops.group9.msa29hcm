@@ -1,0 +1,53 @@
+@startuml
+skinparam usecase {
+    BackgroundColor #FCF3CF
+    BorderColor #B7950B
+}
+skinparam rectangle {
+    BackgroundColor #EBF5FB
+    BorderColor #2874A6
+}
+skinparam database {
+    BackgroundColor #EAFAF1
+    BorderColor #239B56
+}
+skinparam arrowColor #34495E
+skinparam DefaultTextAlignment center
+
+title AI in Production - Final project - Group 9 - Data Flow Diagram
+
+' External Entities (Rectangles)
+rectangle "End User" as user
+rectangle "Admin User" as admin
+rectangle "Source Data System\n(Database/CSV)" as raw_data
+
+' Processes (Ovals/Usecases)
+usecase "Preprocess Data" as p_preprocess
+usecase "Train ML Model" as p_train
+usecase "Serve Online Prediction" as p_serve
+usecase "Scrape Metrics\n(Prometheus)" as p_prometheus
+usecase "Visualize Dashboards\n(Grafana)" as p_grafana
+
+' Data Stores
+database "Local Storage\n(Model Registry)" as ds_model
+database "Time-Series DB" as ds_metrics
+
+' ========= DATA FLOWS =========
+
+' Training Pipeline
+raw_data -down-> p_preprocess : Historical User Data
+p_preprocess -down-> p_train : Processed Features\n& Labels
+p_train -right-> ds_model : Trained Model Artifacts\n(.pkl)
+
+' Online Serving Pipeline
+ds_model -up-> p_serve : Model Data\n(Loaded on Startup)
+user -down-> p_serve : POST /predict\n(User Features)
+p_serve -up-> user : Prediction Response\n(Probability)
+
+' Observability Pipeline
+p_serve -right-> p_prometheus : Expose /metrics
+p_prometheus -down-> ds_metrics : Time-series Data
+ds_metrics -right-> p_grafana : Query Results
+p_grafana -up-> admin : Interactive Dashboards
+
+@enduml

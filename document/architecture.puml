@@ -1,0 +1,74 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 70
+skinparam ranksep 60
+skinparam padding 10
+skinparam databaseBackgroundColor #EBF5FB
+skinparam componentBackgroundColor #EAFAF1
+skinparam nodeBackgroundColor #FCF3CF
+skinparam packageBackgroundColor #FDFEFE
+
+title AI in Production - Final project - Group 9
+
+' ==========================================
+' OFFLINE PIPELINE
+' ==========================================
+package "Offline Training Pipeline" <<Local Scripts>> {
+    database "Raw Data" as DB 
+    component "train_model.py" as Train_Script {
+        component "Data Processing" as Data_Processing
+        component "Model Training" as Model_Training
+    }
+}
+
+database "Local Storage\nVolume: ./models" as Model_Registry <<File System>>
+
+' ==========================================
+' ONLINE SERVING
+' ==========================================
+package "Online Serving" <<FastAPI Container>> {
+    component "API Endpoints\n(main.py)" as API_Endpoint
+    
+    component "Inference Engine\n(model.py)" as Inference_Engine
+    
+    component "Instrumentation\n(metrics.py & middleware)" as Instrumentation
+}
+
+' ==========================================
+' OBSERVABILITY STACK
+' ==========================================
+node "Observability Stack" <<Docker Containers>> {
+    [Prometheus] as Prometheus
+    [Grafana (Dashboards)] as Grafana
+}
+
+' ==========================================
+' EXTERNAL ACTORS
+' ==========================================
+actor "User" as User
+
+' ==========================================
+' RELATIONS
+' ==========================================
+
+' Offline Flow
+DB -> Data_Processing : Reads data
+Data_Processing -> Model_Training : Processes features
+Model_Training -> Model_Registry : Saves model (.pkl)
+
+' Online Flow
+Model_Registry ..> Inference_Engine : Loads to RAM\n(on startup)
+API_Endpoint -> Inference_Engine : Triggers predict()
+User --> API_Endpoint : Access API Endpoint\nto query predict
+
+' Instrumentation Internal Flow
+API_Endpoint -right-> Instrumentation : Intercepts\n(API Metrics)
+Inference_Engine -right-> Instrumentation : Records\n(ML Metrics)
+
+' Observability Flow
+Instrumentation --> Prometheus : Scraped via /metrics
+Prometheus -right-> Grafana : Data Source
+User --> Grafana : Access Dashboard to\nadministrate & monitor system
+
+@enduml
