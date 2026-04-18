@@ -22,6 +22,7 @@ finalproject.mlops.group9.msa29hcm/
 │   ├── config.py           # Configuration
 │   ├── metrics.py          # Prometheus metrics
 │   └── middleware.py       # Metrics middleware
+├── document/               # Save diagrams of systems
 ├── prometheus/
 │   ├── prometheus.yml      # Prometheus config
 │   └── alerts/
@@ -86,7 +87,7 @@ Expected:
 ```bash
 curl -X POST http://localhost:8000/predict \
   -H "Content-Type: application/json" \
-  -d '{"user_id":"196","movie_id":"242"}'
+  -d '{"user_id":"196"}'
 ```
 
 ## 4. Testing
