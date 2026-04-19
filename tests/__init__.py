@@ -1,1 +1,1 @@
-"""Test package for Lab 4."""
+"""Test package for Customer Churn Prediction."""

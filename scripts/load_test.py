@@ -1,5 +1,5 @@
 """
-Load Testing Script for Movie Rating API.
+Load Testing Script for Customer Churn Prediction API.
 
 This script generates load on the API to test metrics collection
 and visualization in Grafana.
@@ -29,8 +29,8 @@ def make_single_prediction() -> Tuple[bool, float]:
     Returns:
         Tuple of (success: bool, latency_ms: float)
     """
-    # Generate random user and movie IDs
-    # MovieLens 100K has users 1-943 and movies 1-1682
+    # Generate random user and customer IDs
+    # Customer Churn Prediction has users 1-943 and movies 1-1682
     user_id = str(random.randint(1, 943))
     movie_id = str(random.randint(1, 1682))
     
@@ -112,7 +112,7 @@ def run_load_test(duration: int = 60, workers: int = 10, batch_mode: bool = Fals
         batch_mode: If True, use batch predictions
     """
     print("=" * 60)
-    print("Load Test for Movie Rating API")
+    print("Load Test for Customer Churn Prediction API")
     print("=" * 60)
     print(f"Duration: {duration}s")
     print(f"Workers: {workers}")
@@ -240,7 +240,7 @@ def run_spike_test(normal_workers: int = 5, spike_workers: int = 100, spike_dura
 # =============================================================================
 
 def main():
-    parser = argparse.ArgumentParser(description="Load test the Movie Rating API")
+    parser = argparse.ArgumentParser(description="Load test the Customer Churn Prediction API")
     parser.add_argument("--duration", type=int, default=60, help="Test duration in seconds")
     parser.add_argument("--workers", type=int, default=10, help="Number of concurrent workers")
     parser.add_argument("--batch", action="store_true", help="Use batch predictions")
