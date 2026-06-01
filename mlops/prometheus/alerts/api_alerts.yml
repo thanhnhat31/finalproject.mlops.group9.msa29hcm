@@ -1,8 +1,5 @@
 # =============================================================================
 # API Alerting Rules
-# DDM501 - Lab 4: Monitoring & Production Deployment
-#
-# TODO: Complete the alerting rules below
 #
 # Documentation: https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
 # =============================================================================
@@ -64,12 +61,12 @@ groups:
       # Severity: critical
       
       # - alert: ServiceDown
-      #   expr: up{job="movie-rating-api"} == 0
+      #   expr: up{job="churn-api"} == 0
       #   for: 1m
       #   labels:
       #     severity: critical
       #   annotations:
-      #     summary: "Movie Rating API is down"
+      #     summary: "Customer Churn API is down"
       #     description: "The API service has been unreachable for more than 1 minute"
 
       - alert: ServiceDown

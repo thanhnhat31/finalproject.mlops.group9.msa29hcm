@@ -1,5 +1,5 @@
 """
-Script to train and save the movie rating prediction model.
+Script to train and save the Customer Churn Prediction model.
 
 Usage:
     python scripts/train_model.py

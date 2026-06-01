@@ -1,8 +1,5 @@
 # =============================================================================
 # Docker Compose - Full Monitoring Stack
-# DDM501 - Lab 4: Monitoring & Production Deployment
-#
-# TODO: Complete the service configurations below
 #
 # Services:
 # - api: FastAPI application with metrics
@@ -19,7 +16,7 @@ version: '3.8'
 
 services:
   # ===========================================================================
-  # Movie Rating API
+  # Customer Churn Prediction API
   # ===========================================================================
   api:
     build: .

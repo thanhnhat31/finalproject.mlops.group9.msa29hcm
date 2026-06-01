@@ -1,6 +1,5 @@
 # =============================================================================
 # Grafana Dashboard Provisioning
-# DDM501 - Lab 4: Monitoring & Production Deployment
 #
 # This file configures automatic dashboard loading from the dashboards folder.
 # =============================================================================
