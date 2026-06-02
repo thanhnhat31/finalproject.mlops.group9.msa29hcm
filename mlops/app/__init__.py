@@ -1,6 +1,5 @@
 """
-Movie Rating Prediction API with Monitoring
-DDM501 - Lab 4: Monitoring & Production Deployment
+Customer Churn Prediction API with Monitoring
 """
 
 __version__ = "1.0.0"

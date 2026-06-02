@@ -1,6 +1,5 @@
 # =============================================================================
-# Dockerfile for Movie Rating Prediction API with Monitoring
-# DDM501 - Lab 4: Monitoring & Production Deployment
+# Dockerfile for Customer Churn Prediction API with Monitoring
 # =============================================================================
 
 FROM python:3.10-slim

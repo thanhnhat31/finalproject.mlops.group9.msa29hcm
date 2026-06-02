@@ -1,5 +1,5 @@
 """
-Unit tests for Movie Rating Prediction API.
+Unit tests for Customer Churn Prediction API.
 
 TODO: Complete the test cases below.
 

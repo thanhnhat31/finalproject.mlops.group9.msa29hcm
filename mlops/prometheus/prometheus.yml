@@ -1,8 +1,5 @@
 # =============================================================================
 # Prometheus Configuration
-# DDM501 - Lab 4: Monitoring & Production Deployment
-#
-# TODO: Complete the configuration below
 #
 # Documentation: https://prometheus.io/docs/prometheus/latest/configuration/
 # =============================================================================
@@ -42,15 +39,15 @@ scrape_configs:
     #     replacement: prometheus
 
   # ==========================================================================
-  # TODO 1: Configure Movie Rating API scraping
+  # TODO 1: Configure Customer Churn API scraping
   # ==========================================================================
   # Requirements:
-  # - Job name: 'movie-rating-api'
+  # - Job name: 'churn-api'
   # - Target: 'api:8000' (Docker service name)
   # - Metrics path: '/metrics'
   # - Scrape interval: 10s (more frequent than default)
   
-  # - job_name: 'movie-rating-api'
+  # - job_name: 'churn-api'
   #   static_configs:
   #     - targets: ['api:8000']
   #   metrics_path: '/metrics'
@@ -60,7 +57,7 @@ scrape_configs:
   #   # relabel_configs:
   #   #   - source_labels: [__address__]
   #   #     target_label: service
-  #   #     replacement: movie-rating-api
+  #   #     replacement: churn-api
 
   - job_name: 'churn-api'
     static_configs:

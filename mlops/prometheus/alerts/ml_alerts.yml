@@ -1,8 +1,5 @@
 # =============================================================================
 # ML-Specific Alerting Rules
-# DDM501 - Lab 4: Monitoring & Production Deployment
-#
-# TODO: Complete the ML alerting rules below
 #
 # These alerts focus on machine learning specific concerns:
 # - Model health
