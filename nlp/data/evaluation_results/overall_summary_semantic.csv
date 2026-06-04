@@ -1,0 +1,5 @@
+﻿Model,Average Latency (ms),Mean Reciprocal Rank (MRR),Accuracy@1 (Hit Rate)
+BM25 (Sparse),0.10406970977783203,0.3020833333333333,0.125
+Bi-Encoder (Dense),12.661004066467285,0.5520833333333333,0.4375
+Cross-Encoder (Context),342.91385412216187,0.46875,0.375
+Two-Stage (Dense + CE),69.7808027267456,0.625,0.5625

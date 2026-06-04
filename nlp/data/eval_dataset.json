@@ -1,0 +1,142 @@
+[
+  {
+    "id": "TC01",
+    "category": "Exact Keyword",
+    "query": "What is the specific mathematical equation utilized by the Okapi BM25 ranking algorithm?",
+    "expected_chunk_id": [9],
+    "note": "Giữ keyword mạnh (Okapi BM25) nhưng viết lại câu để tự nhiên hơn."
+  },
+  {
+    "id": "TC02",
+    "category": "Exact Keyword",
+    "query": "In the context of the TF-IDF formulation, elaborate on the meaning of the variable N.",
+    "expected_chunk_id": [7, 8],
+    "note": "Giữ keyword (N, TF-IDF)."
+  },
+  {
+    "id": "TC03",
+    "category": "Exact Keyword",
+    "query": "Identify the specific algorithm that leverages HNSW for approximate nearest neighbor operations.",
+    "expected_chunk_id": [13],
+    "note": "Giữ keyword (HNSW)."
+  },
+  {
+    "id": "TC04",
+    "category": "Exact Keyword",
+    "query": "According to the provided text, what is the exact context window limitation for standard BERT architectures?",
+    "expected_chunk_id": [17],
+    "note": "Giữ keyword (BERT, context window)."
+  },
+  {
+    "id": "TC05",
+    "category": "Synonyms",
+    "query": "What mechanisms do contemporary retrieval pipelines employ to bridge the gap when a user's phrasing diverges entirely from the source documents?",
+    "expected_chunk_id": [10],
+    "note": "Thay vì dùng từ 'vocabulary mismatch', dùng mô tả tình huống để BM25 không thể match keyword."
+  },
+  {
+    "id": "TC06",
+    "category": "Synonyms",
+    "query": "Which geometrical method is applied to evaluate the directional alignment of embedded representations?",
+    "expected_chunk_id": [6],
+    "note": "Loại bỏ hoàn toàn chữ 'Cosine Similarity', ép mô hình phải hiểu 'geometrical method' & 'directional alignment'."
+  },
+  {
+    "id": "TC07",
+    "category": "Synonyms",
+    "query": "Why do vector-based approaches often outperform traditional frequency-counting methods when handling complex user intents?",
+    "expected_chunk_id": [11, 12],
+    "note": "Thay vì so sánh 'Dense vs Sparse' trực tiếp, dùng khái niệm tương đương."
+  },
+  {
+    "id": "TC08",
+    "category": "Synonyms",
+    "query": "How does the system quantify the conceptual closeness of two distinct paragraphs without relying on shared terminology?",
+    "expected_chunk_id": [5, 6],
+    "note": "Kiểm tra khả năng hiểu semantic distance."
+  },
+  {
+    "id": "TC09",
+    "category": "Contextual Trap",
+    "query": "Does an exceptionally high occurrence of a search term guarantee a top position in modern semantic ranking systems?",
+    "expected_chunk_id": [8, 9],
+    "note": "Bẫy BM25 về tư duy 'tần suất cao = rank cao', cần Cross-Encoder để hiểu ngữ cảnh."
+  },
+  {
+    "id": "TC10",
+    "category": "Contextual Trap",
+    "query": "Explain the scenario where a document contains all the requested terms but is heavily penalized by the final re-ranker.",
+    "expected_chunk_id": [21, 22],
+    "note": "Đưa bẫy chứa nhiều từ khóa 'terms', 'penalized' nhưng đòi hỏi suy luận luồng đi của Re-ranker."
+  },
+  {
+    "id": "TC11",
+    "category": "Contextual Trap",
+    "query": "Why might a paragraph discussing 'the evolution of power transformers in electrical grids' be mistakenly retrieved for an NLP query by a naive search engine?",
+    "expected_chunk_id": [15, 16],
+    "note": "Bẫy từ khóa 'transformers'. BM25 sẽ lấy bừa chunk có chữ transformer, Semantic Search sẽ né được."
+  },
+  {
+    "id": "TC12",
+    "category": "Contextual Trap",
+    "query": "Discuss the non-linear scaling of term frequency impact; specifically, why doesn't multiplying the occurrence of a keyword by ten result in a tenfold increase in its score?",
+    "expected_chunk_id": [8],
+    "note": "Lược bỏ số '100' và '10' cụ thể, dùng chữ 'tenfold' để tránh việc BM25 ăn may khớp đúng con số."
+  },
+  {
+    "id": "TC13",
+    "category": "Typo Robustness",
+    "query": "What is the primary function of Cosne Simlarity when evaluating the distance between two embedings?",
+    "expected_chunk_id": [6],
+    "note": "Giữ lỗi chính tả ở keyword chính, giảm bớt các từ khóa phụ xung quanh."
+  },
+  {
+    "id": "TC14",
+    "category": "Typo Robustness",
+    "query": "Explain the mechanism that allows a Trnsformer to understand distant relationships within a long paragraph.",
+    "expected_chunk_id": [3],
+    "note": "Lỗi chữ Trnsformer, thay 'long-range dependencies' bằng 'distant relationships'."
+  },
+  {
+    "id": "TC15",
+    "category": "Typo Robustness",
+    "query": "Why might one prefer a Dnese framework when the user's input lacks exact matchng terms?",
+    "expected_chunk_id": [10],
+    "note": "Cố tình viết sai 'Dnese' và 'matchng', bỏ chữ 'Retrieval' và 'Sparse' để BM25 rớt hẳn."
+  },
+  {
+    "id": "TC16",
+    "category": "Typo Robustness",
+    "query": "Describe the architectural limitation often referred to as the Bottlneck in two-tower embeding setups.",
+    "expected_chunk_id": [14],
+    "note": "Lỗi chữ 'Bottlneck' và 'embeding', thay 'Bi-Encoders' bằng 'two-tower' (từ đồng nghĩa chuyên ngành)."
+  },
+  {
+    "id": "TC17",
+    "category": "Out of Domain",
+    "query": "What are the optimal security groups configuration for deploying an Amazon EKS cluster?",
+    "expected_chunk_id": [],
+    "note": "Hoàn toàn OOD về Cloud/DevOps."
+  },
+  {
+    "id": "TC18",
+    "category": "Out of Domain",
+    "query": "How do you manage global state using Redux in a React web application?",
+    "expected_chunk_id": [],
+    "note": "Hoàn toàn OOD về Frontend."
+  },
+  {
+    "id": "TC19",
+    "category": "Out of Domain",
+    "query": "What is the impact of max-pooling layers in a ResNet architecture for computer vision?",
+    "expected_chunk_id": [],
+    "note": "OOD nhưng cùng nhánh AI (Computer Vision). Dùng để test xem Bi-Encoder có bị nhầm lẫn giữa các mảng AI không."
+  },
+  {
+    "id": "TC20",
+    "category": "Out of Domain",
+    "query": "What are the standard dimensions for a regulation basketball court?",
+    "expected_chunk_id": [],
+    "note": "Câu hỏi ngẫu nhiên ngoài đời sống."
+  }
+]

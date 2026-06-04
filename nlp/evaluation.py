@@ -165,6 +165,8 @@ def compute_summary_report(bm25_res, dense_res, ce_res, two_stage_res=None):
         
     return pd.DataFrame(summary_data)
 
+
+
 def compute_category_report(bm25_res, dense_res, ce_res, two_stage_res=None):
     """
     Computes performance statistics (latency, MRR, hit rate) grouped by Category for all models.

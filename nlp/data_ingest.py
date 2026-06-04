@@ -1,6 +1,7 @@
 import os
 import pypdf
 import nltk
+import re
 from nltk.tokenize import sent_tokenize
 
 def extract_text_from_pdf(pdf_path):
@@ -107,6 +108,59 @@ def semantic_chunking_by_sentence(text, target_word_count=150, overlap_sentences
                 current_word_count = sum(len(s.split()) for s in current_chunk_sentences)
             else:
                 current_chunk_sentences = []
+                current_word_count = 0
+                
+        i += 1
+        
+    return chunks
+
+def chunk_by_paragraph(text, target_word_count=150, overlap_paragraphs=1):
+    """
+    Split text into chunks based on paragraph boundaries,
+    ensuring the length of each chunk is approximately target_word_count.
+    
+    Args:
+        text (str): Raw input text.
+        target_word_count (int): Target word count (estimated) for each chunk.
+        overlap_paragraphs (int): Number of overlapping paragraphs between chunks.
+        
+    Returns:
+        list of str: List of paragraph-based chunks.
+    """
+    if not text or not text.strip():
+        return []
+
+    # Split text into paragraphs using double newlines (handles varying spacing)
+    paragraphs = [p.strip() for p in re.split(r'\n\s*\n', text) if p.strip()]
+    
+    chunks = []
+    current_chunk_paragraphs = []
+    current_word_count = 0
+    
+    i = 0
+    while i < len(paragraphs):
+        para = paragraphs[i]
+        para_word_count = len(para.split())
+        
+        # Add current paragraph to the accumulating chunk
+        current_chunk_paragraphs.append(para)
+        current_word_count += para_word_count
+        
+        # Check if the chunk has reached the target word count
+        # Or force close the chunk if this is the last paragraph
+        if current_word_count >= target_word_count or i == len(paragraphs) - 1:
+            # Join paragraphs into a text chunk with double newlines
+            chunk_text = "\n\n".join(current_chunk_paragraphs)
+            chunks.append(chunk_text)
+            
+            # Prepare for the next chunk (handle paragraph overlap)
+            if overlap_paragraphs > 0 and i < len(paragraphs) - 1:
+                # Keep 'overlap_paragraphs' last paragraphs of the current chunk
+                current_chunk_paragraphs = current_chunk_paragraphs[-overlap_paragraphs:]
+                # Recalculate word count of the overlap part
+                current_word_count = sum(len(p.split()) for p in current_chunk_paragraphs)
+            else:
+                current_chunk_paragraphs = []
                 current_word_count = 0
                 
         i += 1
