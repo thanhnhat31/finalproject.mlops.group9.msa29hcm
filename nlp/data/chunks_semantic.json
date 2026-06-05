@@ -1,7 +1,7 @@
 {
     "metadata": {
         "source_file": "NLP_Architecture-of-meaning.pdf",
-        "chunking_method": "document_chunking"
+        "chunking_method": "semantic_chunks"
     },
     "total_chunks": 25,
     "chunks": [

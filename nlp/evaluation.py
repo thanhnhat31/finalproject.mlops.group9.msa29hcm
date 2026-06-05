@@ -27,14 +27,19 @@ def calculate_metrics(retrieved_indices, expected_indices):
             
     return rr, hit_at_1
 
-def evaluate_bm25(dataset, chunks, bm25_index, top_k=3):
+def evaluate_bm25(dataset, chunks, bm25_index, chunking_method, top_k=3):
     """
     Evaluate the Custom BM25 Sparse retriever.
+    
+    Args:
+        chunking_method (str): The key mapping to the expected chunk IDs 
+                               (e.g., 'paragraph_chunks', 'semantic_chunks', 'sliding_window').
     """
     results = []
     for item in dataset:
         query_text = item["query"]
-        expected = item.get("expected_chunk_id", [])
+        # Extract the expected IDs based on the specified chunking method
+        expected = item.get("expected_chunks", {}).get(chunking_method, [])
         
         retrieved, duration = bm25_index.retrieve(query_text, chunks, top_k=top_k)
         retrieved_indices = [r["chunk_index"] for r in retrieved]
@@ -44,7 +49,7 @@ def evaluate_bm25(dataset, chunks, bm25_index, top_k=3):
             "id": item["id"],
             "category": item["category"],
             "query": query_text,
-            "expected_chunk_id": expected,
+            "expected_chunk_id": expected, # Keep this key for compatibility with report functions
             "retrieved_index": retrieved_indices[0] if retrieved_indices else -1,
             "latency_ms": duration * 1000,
             "rr": rr,
@@ -52,14 +57,14 @@ def evaluate_bm25(dataset, chunks, bm25_index, top_k=3):
         })
     return results
 
-def evaluate_dense(dataset, chunks, dense_retriever, top_k=3):
+def evaluate_dense(dataset, chunks, dense_retriever, chunking_method, top_k=3):
     """
     Evaluate the Bi-Encoder Dense retriever.
     """
     results = []
     for item in dataset:
         query_text = item["query"]
-        expected = item.get("expected_chunk_id", [])
+        expected = item.get("expected_chunks", {}).get(chunking_method, [])
         
         retrieved, duration = dense_retriever.retrieve(query_text, chunks, top_k=top_k)
         retrieved_indices = [r["chunk_index"] for r in retrieved]
@@ -77,14 +82,14 @@ def evaluate_dense(dataset, chunks, dense_retriever, top_k=3):
         })
     return results
 
-def evaluate_cross_encoder_single_stage(dataset, chunks, ce_model, single_stage_fn, top_k=3):
+def evaluate_cross_encoder_single_stage(dataset, chunks, ce_model, single_stage_fn, chunking_method, top_k=3):
     """
     Evaluate the Single-Stage Cross-Encoder model.
     """
     results = []
     for item in dataset:
         query_text = item["query"]
-        expected = item.get("expected_chunk_id", [])
+        expected = item.get("expected_chunks", {}).get(chunking_method, [])
         
         retrieved, duration = single_stage_fn(query_text, chunks, ce_model, top_k=top_k)
         retrieved_indices = [r["chunk_index"] for r in retrieved]
@@ -102,14 +107,14 @@ def evaluate_cross_encoder_single_stage(dataset, chunks, ce_model, single_stage_
         })
     return results
 
-def evaluate_two_stage(dataset, chunks, dense_retriever, ce_model, two_stage_fn, stage1_top_k=5, stage2_top_k=3):
+def evaluate_two_stage(dataset, chunks, dense_retriever, ce_model, two_stage_fn, chunking_method, stage1_top_k=5, stage2_top_k=3):
     """
     Evaluate the Two-Stage Cross-Encoder retriever.
     """
     results = []
     for item in dataset:
         query_text = item["query"]
-        expected = item.get("expected_chunk_id", [])
+        expected = item.get("expected_chunks", {}).get(chunking_method, [])
         
         retrieved, latency_breakdown = two_stage_fn(
             query=query_text,
@@ -164,8 +169,6 @@ def compute_summary_report(bm25_res, dense_res, ce_res, two_stage_res=None):
         })
         
     return pd.DataFrame(summary_data)
-
-
 
 def compute_category_report(bm25_res, dense_res, ce_res, two_stage_res=None):
     """

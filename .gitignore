@@ -29,10 +29,6 @@ htmlcov/
 #models/*.pkl
 !models/.gitkeep
 
-# Data
-data/
-*.csv
-
 # Logs
 *.log
 

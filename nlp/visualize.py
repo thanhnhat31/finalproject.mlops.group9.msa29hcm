@@ -465,12 +465,12 @@ def display_overall_summary(data_dir="nlp/data/evaluation_results"):
         {"selector": "td", "props": [("padding", "8px 10px"), ("text-align", "left"), ("border-bottom", "1px solid #333")]},
     ])
     
-    try:
-        from IPython.display import display
-        display(styled)
-    except ImportError:
-        print("\n=== OVERALL RETRIEVAL PERFORMANCE SUMMARY ===")
-        print(df_disp.to_string())
+    # try:
+    #     from IPython.display import display
+    #     display(styled)
+    # except ImportError:
+    #     print("\n=== OVERALL RETRIEVAL PERFORMANCE SUMMARY ===")
+    #     print(df_disp.to_string())
         
     return styled
 
