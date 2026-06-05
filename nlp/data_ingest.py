@@ -215,3 +215,20 @@ def load_chunks_from_json(json_path):
     chunks = [chunk_item["text"] for chunk_item in data["chunks"]]
     return chunks, data.get("metadata", {})
 
+def document_chunking(text,  source):
+    print("\nPerforming chunking...")
+
+    # 1. Chunking with sliding windows
+    sliding_chunks = sliding_window_chunking(text, chunk_size=150, chunk_overlap=30)
+    print(f"-> Split into {len(sliding_chunks)} sliding chunks.")
+    
+    # 2. Chunking with semantic
+    semantic_chunks = semantic_chunking_by_sentence(text, target_word_count=150, overlap_sentences=1)
+    print(f"-> Split into {len(semantic_chunks)} semantic chunks.")
+    
+    # 3. Chunking with paragraph
+    paragraph_chunks = chunk_by_paragraph(text, target_word_count=150, overlap_paragraphs=1)
+    print(f"-> Split into {len(paragraph_chunks)} paragraph chunks.")
+
+
+    return sliding_chunks, semantic_chunks, paragraph_chunks

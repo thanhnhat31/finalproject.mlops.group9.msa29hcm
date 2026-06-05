@@ -1,9 +1,8 @@
 {
     "metadata": {
-        "source_file": "NLP_Architecture-of-meaning.pdf",
         "chunking_method": "semantic_chunks"
     },
-    "total_chunks": 25,
+    "total_chunks": 28,
     "chunks": [
         {
             "index": 0,
@@ -129,6 +128,21 @@
             "index": 24,
             "word_count": 63,
             "text": "Furthermore,  cloud  infrastructure  (such  as  AWS,  GCP,  or  regional  \nproviders)\n \nallows\n \nfor\n \nthe\n \nimplementation\n \nof\n \nload\n \nbalancers\n \nto\n \ndistribute\n \nincoming\n \nqueries\n \nacross\n \nmultiple\n \nAPI\n \ninstances. As\n \nthe\n \ndocument\n \ncorpus\n \nexpands\n \nfrom\n \ngigabytes\n \nto\n \nterabytes,\n \nthe\n \narchitecture\n \nmust\n \nsupport\n \nhorizontal\n \nsharding\n \nof\n \nthe\n \nVector\n \nDatabase,\n \nensuring\n \nthat\n \nthe\n \ntheoretical\n \nelegance\n \nof\n \nthe\n \nVector\n \nSpace\n \nModel\n \ntranslates\n \neffectively\n \ninto\n \na\n \nresilient,\n \nhighly\n \navailable\n \nenterprise\n \nsolution."
+        },
+        {
+            "index": 25,
+            "word_count": 164,
+            "text": "HIGH-VOLTAGE POWER DISTRIBUTION ARCHITECTURES:  \nA CRITICAL EVALUATION OF TRANSFORMER TRANSMISSION NETWORKS IN MODERN \nELECTRICAL GRIDS \n \nCHAPTER 1: SYSTEM PARAMETERS AND CORE MECHANISMS \n \nThe architectural layout of a modern electrical power grid requires rigorous evaluation of \nvector control systems and multi-layered grid conﬁgurations. At the center of this \ndistribution framework is the heavy-duty power Transformer network, which functions as \nthe primary component for voltage scaling. The fundamental architecture of a high-voltage \nTransformer relies on magnetic induction loops that carefully process the power load input. If the load parameters exceed the design threshold, the system may experience severe \nbreakdown, causing local substations to completely lose connection to the primary grid \nnode. To mitigate transmission loss across long distances, grid engineers deploy a specialized \nmulti-container isolation framework for step-up and step-down sub-stations. In this multi-\ntower environment, the main Transformer model processes large-scale electricity ﬂowing \nthrough various transmission channels. This mechanism is mathematically optimized \nusing non-linear scaling calculations to prevent a sudden tenfold increase in current \ndensity."
+        },
+        {
+            "index": 26,
+            "word_count": 163,
+            "text": "This mechanism is mathematically optimized \nusing non-linear scaling calculations to prevent a sudden tenfold increase in current \ndensity. Managing the global state of these networks requires real-time telemetry inputs to \ncalculate the directional alignment of phase angles, using a geometrical calculation similar \nto angular distance metrics. CHAPTER 2: CONTEXT WINDOWS AND ATTENTION SCHEMES IN GRID MONITORING \n \nAdvanced grid monitoring systems utilize a static window setup, often referred to as a \n\"context window, \" to observe the temporal behavior of thermal anomalies. Within this \nwindow, ﬁeld engineers pay close attention to structural limitations. Speciﬁcally, this \noperational \"attention mechanism\" is strictly ﬁxed on monitoring the core temperature of \nthe system. When a multi-layer neural relay observes a large input evaluation sequence, the attention \nmechanism in a Transformer network can fail if the primary input frequency creates \nharmonic distortion. This bottleneck eƯect in two-tower hardware setups occurs because \nthe long-range dependencies of electrical currents over thousands of miles create \nmagnetic feedback loops, overriding standard sub-station thresholds."
+        },
+        {
+            "index": 27,
+            "word_count": 99,
+            "text": "This bottleneck eƯect in two-tower hardware setups occurs because \nthe long-range dependencies of electrical currents over thousands of miles create \nmagnetic feedback loops, overriding standard sub-station thresholds. Naive tracking \nmodels often struggle with this problem, mistakenly mapping thermal spikes to the wrong \ncomponent index. Furthermore, deploying these monitoring units across regional boundaries requires \ndedicated microservices. System administrators must scale these monitoring instances \nindependently, allocating physical load balancers to distribute telemetry data. Explicitly \ndeﬁning independent pathways ensures that a single high-voltage spike will not crash the \ncloud infrastructure, thereby translating theoretical safety elegance into a resilient, highly \navailable production solution."
         }
     ]
 }

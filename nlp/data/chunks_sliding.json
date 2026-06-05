@@ -1,9 +1,8 @@
 {
     "metadata": {
-        "source_file": "NLP_Architecture-of-meaning.pdf",
-        "chunking_method": "sliding_window"
+        "chunking_method": "sliding_chunks"
     },
-    "total_chunks": 27,
+    "total_chunks": 30,
     "chunks": [
         {
             "index": 0,
@@ -139,6 +138,21 @@
             "index": 26,
             "word_count": 144,
             "text": "dedicated GPU resources (via NVIDIA Container Toolkit) specifically to the re-ranking node, while allowing the API gateway to operate on standard, cheaper CPUs. 8.2 Networking and CI/CD Automation Continuous Integration/Continuous Deployment (CI/CD) pipelines frequently encounter networking challenges when automatically deploying complex multi-container NLP systems. Dynamic IP allocation within Docker bridge networks can cause backend services to lose connection to the Vector DB upon container recreation. Explicitly defining static hostname configurations and utilizing Docker's internal DNS resolution ensures deterministic, stable network pathways. Furthermore, cloud infrastructure (such as AWS, GCP, or regional providers) allows for the implementation of load balancers to distribute incoming queries across multiple API instances. As the document corpus expands from gigabytes to terabytes, the architecture must support horizontal sharding of the Vector Database, ensuring that the theoretical elegance of the Vector Space Model translates effectively into a resilient, highly available enterprise solution."
+        },
+        {
+            "index": 27,
+            "word_count": 150,
+            "text": "HIGH-VOLTAGE POWER DISTRIBUTION ARCHITECTURES: A CRITICAL EVALUATION OF TRANSFORMER TRANSMISSION NETWORKS IN MODERN ELECTRICAL GRIDS CHAPTER 1: SYSTEM PARAMETERS AND CORE MECHANISMS The architectural layout of a modern electrical power grid requires rigorous evaluation of vector control systems and multi-layered grid conﬁgurations. At the center of this distribution framework is the heavy-duty power Transformer network, which functions as the primary component for voltage scaling. The fundamental architecture of a high-voltage Transformer relies on magnetic induction loops that carefully process the power load input. If the load parameters exceed the design threshold, the system may experience severe breakdown, causing local substations to completely lose connection to the primary grid node. To mitigate transmission loss across long distances, grid engineers deploy a specialized multi-container isolation framework for step-up and step-down sub-stations. In this multi- tower environment, the main Transformer model processes large-scale electricity ﬂowing through various transmission channels. This mechanism is mathematically"
+        },
+        {
+            "index": 28,
+            "word_count": 150,
+            "text": "specialized multi-container isolation framework for step-up and step-down sub-stations. In this multi- tower environment, the main Transformer model processes large-scale electricity ﬂowing through various transmission channels. This mechanism is mathematically optimized using non-linear scaling calculations to prevent a sudden tenfold increase in current density. Managing the global state of these networks requires real-time telemetry inputs to calculate the directional alignment of phase angles, using a geometrical calculation similar to angular distance metrics. CHAPTER 2: CONTEXT WINDOWS AND ATTENTION SCHEMES IN GRID MONITORING Advanced grid monitoring systems utilize a static window setup, often referred to as a \"context window, \" to observe the temporal behavior of thermal anomalies. Within this window, ﬁeld engineers pay close attention to structural limitations. Speciﬁcally, this operational \"attention mechanism\" is strictly ﬁxed on monitoring the core temperature of the system. When a multi-layer neural relay observes a large input evaluation sequence, the attention mechanism in a"
+        },
+        {
+            "index": 29,
+            "word_count": 141,
+            "text": "operational \"attention mechanism\" is strictly ﬁxed on monitoring the core temperature of the system. When a multi-layer neural relay observes a large input evaluation sequence, the attention mechanism in a Transformer network can fail if the primary input frequency creates harmonic distortion. This bottleneck eƯect in two-tower hardware setups occurs because the long-range dependencies of electrical currents over thousands of miles create magnetic feedback loops, overriding standard sub-station thresholds. Naive tracking models often struggle with this problem, mistakenly mapping thermal spikes to the wrong component index. Furthermore, deploying these monitoring units across regional boundaries requires dedicated microservices. System administrators must scale these monitoring instances independently, allocating physical load balancers to distribute telemetry data. Explicitly deﬁning independent pathways ensures that a single high-voltage spike will not crash the cloud infrastructure, thereby translating theoretical safety elegance into a resilient, highly available production solution."
         }
     ]
 }

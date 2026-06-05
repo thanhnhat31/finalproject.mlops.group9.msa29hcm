@@ -1,9 +1,8 @@
 {
     "metadata": {
-        "source_file": "NLP_Architecture-of-meaning.pdf",
         "chunking_method": "paragraph_chunks"
     },
-    "total_chunks": 24,
+    "total_chunks": 27,
     "chunks": [
         {
             "index": 0,
@@ -124,6 +123,21 @@
             "index": 23,
             "word_count": 22,
             "text": "the\n\nVector\n\nDatabase,\n\nensuring\n\nthat\n\nthe\n\ntheoretical\n\nelegance\n\nof\n\nthe\n\nVector\n\nSpace\n\nModel\n\ntranslates\n\neffectively\n\ninto\n\na\n\nresilient,\n\nhighly\n\navailable\n\nenterprise\n\nsolution."
+        },
+        {
+            "index": 24,
+            "word_count": 192,
+            "text": "HIGH-VOLTAGE POWER DISTRIBUTION ARCHITECTURES:  \nA CRITICAL EVALUATION OF TRANSFORMER TRANSMISSION NETWORKS IN MODERN \nELECTRICAL GRIDS\n\nCHAPTER 1: SYSTEM PARAMETERS AND CORE MECHANISMS\n\nThe architectural layout of a modern electrical power grid requires rigorous evaluation of \nvector control systems and multi-layered grid conﬁgurations. At the center of this \ndistribution framework is the heavy-duty power Transformer network, which functions as \nthe primary component for voltage scaling. The fundamental architecture of a high-voltage \nTransformer relies on magnetic induction loops that carefully process the power load input. \nIf the load parameters exceed the design threshold, the system may experience severe \nbreakdown, causing local substations to completely lose connection to the primary grid \nnode.\n\nTo mitigate transmission loss across long distances, grid engineers deploy a specialized \nmulti-container isolation framework for step-up and step-down sub-stations. In this multi-\ntower environment, the main Transformer model processes large-scale electricity ﬂowing \nthrough various transmission channels. This mechanism is mathematically optimized \nusing non-linear scaling calculations to prevent a sudden tenfold increase in current \ndensity. Managing the global state of these networks requires real-time telemetry inputs to \ncalculate the directional alignment of phase angles, using a geometrical calculation similar \nto angular distance metrics."
+        },
+        {
+            "index": 25,
+            "word_count": 217,
+            "text": "To mitigate transmission loss across long distances, grid engineers deploy a specialized \nmulti-container isolation framework for step-up and step-down sub-stations. In this multi-\ntower environment, the main Transformer model processes large-scale electricity ﬂowing \nthrough various transmission channels. This mechanism is mathematically optimized \nusing non-linear scaling calculations to prevent a sudden tenfold increase in current \ndensity. Managing the global state of these networks requires real-time telemetry inputs to \ncalculate the directional alignment of phase angles, using a geometrical calculation similar \nto angular distance metrics.\n\nCHAPTER 2: CONTEXT WINDOWS AND ATTENTION SCHEMES IN GRID MONITORING\n\nAdvanced grid monitoring systems utilize a static window setup, often referred to as a \n\"context window, \" to observe the temporal behavior of thermal anomalies. Within this \nwindow, ﬁeld engineers pay close attention to structural limitations. Speciﬁcally, this \noperational \"attention mechanism\" is strictly ﬁxed on monitoring the core temperature of \nthe system.\n\nWhen a multi-layer neural relay observes a large input evaluation sequence, the attention \nmechanism in a Transformer network can fail if the primary input frequency creates \nharmonic distortion. This bottleneck eƯect in two-tower hardware setups occurs because \nthe long-range dependencies of electrical currents over thousands of miles create \nmagnetic feedback loops, overriding standard sub-station thresholds. Naive tracking \nmodels often struggle with this problem, mistakenly mapping thermal spikes to the wrong \ncomponent index."
+        },
+        {
+            "index": 26,
+            "word_count": 127,
+            "text": "When a multi-layer neural relay observes a large input evaluation sequence, the attention \nmechanism in a Transformer network can fail if the primary input frequency creates \nharmonic distortion. This bottleneck eƯect in two-tower hardware setups occurs because \nthe long-range dependencies of electrical currents over thousands of miles create \nmagnetic feedback loops, overriding standard sub-station thresholds. Naive tracking \nmodels often struggle with this problem, mistakenly mapping thermal spikes to the wrong \ncomponent index.\n\nFurthermore, deploying these monitoring units across regional boundaries requires \ndedicated microservices. System administrators must scale these monitoring instances \nindependently, allocating physical load balancers to distribute telemetry data. Explicitly \ndeﬁning independent pathways ensures that a single high-voltage spike will not crash the \ncloud infrastructure, thereby translating theoretical safety elegance into a resilient, highly \navailable production solution."
         }
     ]
 }

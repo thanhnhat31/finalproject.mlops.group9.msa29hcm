@@ -112,7 +112,7 @@
   {
     "id": "TC11",
     "category": "Contextual Trap",
-    "query": "Why might a paragraph discussing 'the evolution of power transformers in electrical grids' be mistakenly retrieved for an NLP query by a naive search engine?",
+    "query": "Why might the attention mechanism in a Transformer network fail during a long input evaluation sequence?",
     "expected_chunks": {
       "paragraph_chunks": [15, 16],
       "semantic_chunks": [15, 16],
