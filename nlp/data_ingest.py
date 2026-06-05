@@ -232,3 +232,14 @@ def document_chunking(text,  source):
 
 
     return sliding_chunks, semantic_chunks, paragraph_chunks
+
+def clean_pdf_text(text):
+    # Step 1: Replace double newlines (paragraph breaks) with a temporary placeholder
+    text = re.sub(r'\n\s*\n', '##PARA_BREAK##', text)
+    # Step 2: Replace single newlines (line wraps) with a single space
+    text = text.replace('\n', ' ')
+    # Step 3: Restore paragraph breaks back to standard \n\n
+    text = text.replace('##PARA_BREAK##', '\n\n')
+    # Step 4: Normalize extra whitespaces
+    text = re.sub(r'[ \t]+', ' ', text)
+    return text.strip()
