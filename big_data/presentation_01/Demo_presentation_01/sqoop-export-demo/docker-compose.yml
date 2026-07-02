@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pg-sqoop-demo
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: sqoop_demo
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - sqoop-net
+
+  hadoop-sqoop:
+    build: .
+    container_name: hadoop-sqoop
+    ports:
+      - "9870:9870"
+    networks:
+      - sqoop-net
+    depends_on:
+      - postgres
+    stdin_open: true
+    tty: true
+    command: bash -c "tail -f /dev/null"
+
+networks:
+  sqoop-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
