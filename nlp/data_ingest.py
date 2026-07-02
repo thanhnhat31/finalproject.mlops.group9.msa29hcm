@@ -1,0 +1,245 @@
+import os
+import pypdf
+import nltk
+import re
+from nltk.tokenize import sent_tokenize
+
+def extract_text_from_pdf(pdf_path):
+    """
+    Read and extract content from a PDF file.
+    """
+    if not os.path.exists(pdf_path):
+        raise FileNotFoundError(f"File not found: {pdf_path}")
+        
+    reader = pypdf.PdfReader(pdf_path)
+    full_text = []
+    
+    for page_num, page in enumerate(reader.pages):
+        text = page.extract_text()
+        if text:
+            # Remove leading and trailing spaces from the page text
+            full_text.append(text.strip())
+            
+    # Join the text of all pages with double newlines
+    return "\n\n".join(full_text)
+
+def sliding_window_chunking(text, chunk_size=150, chunk_overlap=30):
+    """
+    Divide text into chunks using the sliding window method based on word count.
+    
+    Args:
+        text (str): Raw input text.
+        chunk_size (int): Maximum number of words in each chunk.
+        chunk_overlap (int): Number of overlapping words between adjacent chunks.
+        
+    Returns:
+        list of str: List of text chunks after chunking.
+    """
+    # Split text into a list of words
+    words = text.split()
+    chunks = []
+    
+    # Stride of the sliding window
+    stride = chunk_size - chunk_overlap
+    if stride <= 0:
+        raise ValueError("chunk_overlap must be smaller than chunk_size")
+        
+    for i in range(0, len(words), stride):
+        # Get the chunk of words from position i to i + chunk_size
+        chunk_words = words[i:i + chunk_size]
+        chunk_text = " ".join(chunk_words)
+        chunks.append(chunk_text)
+        
+        # Stop the loop if we have reached the end of the text
+        if i + chunk_size >= len(words):
+            break
+            
+    return chunks
+
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
+
+def semantic_chunking_by_sentence(text, target_word_count=150, overlap_sentences=1):
+    """
+    Split text into chunks based on sentence boundaries, 
+    ensuring the length of each chunk is approximately target_word_count.
+    
+    Args:
+        text (str): Raw input text.
+        target_word_count (int): Target word count (estimated) for each chunk.
+        overlap_sentences (int): Number of overlapping sentences between chunks.
+        
+    Returns:
+        list of str: List of semantically complete chunks.
+    """
+    if not text or not text.strip():
+        return []
+
+    # 1. Split text into complete sentences
+    sentences = sent_tokenize(text)
+    
+    chunks = []
+    current_chunk_sentences = []
+    current_word_count = 0
+    
+    i = 0
+    while i < len(sentences):
+        sentence = sentences[i]
+        sentence_word_count = len(sentence.split())
+        
+        # Add current sentence to the accumulating chunk
+        current_chunk_sentences.append(sentence)
+        current_word_count += sentence_word_count
+        
+        # Check if the chunk has reached the target word count
+        # Or force close the chunk if this is the last sentence in the text
+        if current_word_count >= target_word_count or i == len(sentences) - 1:
+            # Join sentences into a text chunk
+            chunk_text = " ".join(current_chunk_sentences)
+            chunks.append(chunk_text)
+            
+            # Prepare for the next chunk (handle sliding window overlap)
+            if overlap_sentences > 0 and i < len(sentences) - 1:
+                # Keep 'overlap_sentences' last sentences of the current chunk
+                current_chunk_sentences = current_chunk_sentences[-overlap_sentences:]
+                # Recalculate word count of the overlap part to add to the next chunk
+                current_word_count = sum(len(s.split()) for s in current_chunk_sentences)
+            else:
+                current_chunk_sentences = []
+                current_word_count = 0
+                
+        i += 1
+        
+    return chunks
+
+def chunk_by_paragraph(text, target_word_count=150, overlap_paragraphs=1):
+    """
+    Split text into chunks based on paragraph boundaries,
+    ensuring the length of each chunk is approximately target_word_count.
+    
+    Args:
+        text (str): Raw input text.
+        target_word_count (int): Target word count (estimated) for each chunk.
+        overlap_paragraphs (int): Number of overlapping paragraphs between chunks.
+        
+    Returns:
+        list of str: List of paragraph-based chunks.
+    """
+    if not text or not text.strip():
+        return []
+
+    # Split text into paragraphs using double newlines (handles varying spacing)
+    paragraphs = [p.strip() for p in re.split(r'\n\s*\n', text) if p.strip()]
+    
+    chunks = []
+    current_chunk_paragraphs = []
+    current_word_count = 0
+    
+    i = 0
+    while i < len(paragraphs):
+        para = paragraphs[i]
+        para_word_count = len(para.split())
+        
+        # Add current paragraph to the accumulating chunk
+        current_chunk_paragraphs.append(para)
+        current_word_count += para_word_count
+        
+        # Check if the chunk has reached the target word count
+        # Or force close the chunk if this is the last paragraph
+        if current_word_count >= target_word_count or i == len(paragraphs) - 1:
+            # Join paragraphs into a text chunk with double newlines
+            chunk_text = "\n\n".join(current_chunk_paragraphs)
+            chunks.append(chunk_text)
+            
+            # Prepare for the next chunk (handle paragraph overlap)
+            if overlap_paragraphs > 0 and i < len(paragraphs) - 1:
+                # Keep 'overlap_paragraphs' last paragraphs of the current chunk
+                current_chunk_paragraphs = current_chunk_paragraphs[-overlap_paragraphs:]
+                # Recalculate word count of the overlap part
+                current_word_count = sum(len(p.split()) for p in current_chunk_paragraphs)
+            else:
+                current_chunk_paragraphs = []
+                current_word_count = 0
+                
+        i += 1
+        
+    return chunks
+
+def save_chunks_to_json(chunks, output_path, metadata=None):
+    """
+    Saves a list of text chunks to a JSON file, optionally adding metadata.
+    
+    Args:
+        chunks (list of str): The text chunks to save.
+        output_path (str): The path to the output JSON file.
+        metadata (dict, optional): Additional metadata (e.g., source file name).
+    """
+    import json
+    dir_name = os.path.dirname(output_path)
+    if dir_name:
+        os.makedirs(dir_name, exist_ok=True)
+    
+    data = {
+        "metadata": metadata or {},
+        "total_chunks": len(chunks),
+        "chunks": [
+            {
+                "index": idx,
+                "word_count": len(chunk.split()),
+                "text": chunk
+            }
+            for idx, chunk in enumerate(chunks)
+        ]
+    }
+    
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+    print(f"Successfully saved {len(chunks)} chunks to {output_path}")
+
+def load_chunks_from_json(json_path):
+    """
+    Loads text chunks and metadata from a JSON file.
+    
+    Args:
+        json_path (str): Path to the JSON file.
+        
+    Returns:
+        tuple: (list of str, dict) -> (chunks, metadata)
+    """
+    import json
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    
+    chunks = [chunk_item["text"] for chunk_item in data["chunks"]]
+    return chunks, data.get("metadata", {})
+
+def document_chunking(text,  source):
+    print("\nPerforming chunking...")
+
+    # 1. Chunking with sliding windows
+    sliding_chunks = sliding_window_chunking(text, chunk_size=150, chunk_overlap=30)
+    print(f"-> Split into {len(sliding_chunks)} sliding chunks.")
+    
+    # 2. Chunking with semantic
+    semantic_chunks = semantic_chunking_by_sentence(text, target_word_count=150, overlap_sentences=1)
+    print(f"-> Split into {len(semantic_chunks)} semantic chunks.")
+    
+    # 3. Chunking with paragraph
+    paragraph_chunks = chunk_by_paragraph(text, target_word_count=150, overlap_paragraphs=1)
+    print(f"-> Split into {len(paragraph_chunks)} paragraph chunks.")
+
+
+    return sliding_chunks, semantic_chunks, paragraph_chunks
+
+def clean_pdf_text(text):
+    # Step 1: Replace double newlines (paragraph breaks) with a temporary placeholder
+    text = re.sub(r'\n\s*\n', '##PARA_BREAK##', text)
+    # Step 2: Replace single newlines (line wraps) with a single space
+    text = text.replace('\n', ' ')
+    # Step 3: Restore paragraph breaks back to standard \n\n
+    text = text.replace('##PARA_BREAK##', '\n\n')
+    # Step 4: Normalize extra whitespaces
+    text = re.sub(r'[ \t]+', ' ', text)
+    return text.strip()

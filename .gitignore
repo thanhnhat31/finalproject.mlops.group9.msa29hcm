@@ -5,6 +5,7 @@ __pycache__/
 *.so
 .Python
 venv/
+.venv/
 env/
 .env
 
@@ -27,10 +28,6 @@ htmlcov/
 # Models (large files)
 #models/*.pkl
 !models/.gitkeep
-
-# Data
-data/
-*.csv
 
 # Logs
 *.log
