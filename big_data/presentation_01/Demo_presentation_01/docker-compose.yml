@@ -1,0 +1,103 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123456}
+      POSTGRES_DB: ${POSTGRES_DB:-studentdb}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/class.sql:/docker-entrypoint-initdb.d/01_class.sql:ro
+      - ./postgres/teacher.sql:/docker-entrypoint-initdb.d/02_teacher.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-studentdb}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  namenode:
+    image: yiwen/hadoop:v3.4.3-openjdk-17-4.1.1
+    container_name: namenode
+    hostname: namenode
+    restart: always
+    ports:
+      - "9870:9870"   # HDFS NameNode web UI (UI on host:9870)
+    volumes:
+      - ./scripts/start-namenode.sh:/start-namenode.sh:ro
+    environment:
+      "HADOOP_HOME": "/opt/hadoop"
+      "CORE_CONF_fs_defaultFS": "hdfs://namenode:8020"
+      "HDFS_CONF_dfs_namenode_rpc___address": "namenode:8020"
+      "HDFS_CONF_dfs_replication": "1"
+      "MAPRED_CONF_mapreduce_framework_name": "yarn"
+      "YARN_CONF_yarn_resourcemanager_hostname": "resourcemanager"
+      "YARN_CONF_yarn_nodemanager_aux___services": "mapreduce_shuffle"
+    # Initialize metadata (first run) then start in foreground
+    command: ["/bin/bash", "/start-namenode.sh"]
+
+  datanode:
+    image: yiwen/hadoop:v3.4.3-openjdk-17-4.1.1
+    container_name: datanode
+    hostname: datanode
+    restart: always
+    depends_on:
+      namenode:
+        condition: service_started
+    environment:
+      "HADOOP_HOME": "/opt/hadoop"
+      "CORE_CONF_fs_defaultFS": "hdfs://namenode:8020"
+      "HDFS_CONF_dfs_namenode_rpc___address": "namenode:8020"
+      "HDFS_CONF_dfs_replication": "1"
+      "YARN_CONF_yarn_resourcemanager_hostname": "resourcemanager"
+    command: ["hdfs", "datanode"]
+
+  resourcemanager:
+    image: yiwen/hadoop:v3.4.3-openjdk-17-4.1.1
+    container_name: resourcemanager
+    hostname: resourcemanager
+    restart: always
+    depends_on:
+      namenode:
+        condition: service_started
+    ports:
+      - "8088:8088"   # YARN ResourceManager web UI (host:8088)
+    environment:
+      "HADOOP_HOME": "/opt/hadoop"
+      "CORE_CONF_fs_defaultFS": "hdfs://namenode:8020"
+      "MAPRED_CONF_mapreduce_framework_name": "yarn"
+      "YARN_CONF_yarn_resourcemanager_hostname": "resourcemanager"
+      "YARN_CONF_yarn_nodemanager_aux___services": "mapreduce_shuffle"
+    command: ["yarn", "resourcemanager"]
+
+  nodemanager:
+    image: yiwen/hadoop:v3.4.3-openjdk-17-4.1.1
+    container_name: nodemanager
+    hostname: nodemanager
+    restart: always
+    depends_on:
+      resourcemanager:
+        condition: service_started
+    environment:
+      "HADOOP_HOME": "/opt/hadoop"
+      "CORE_CONF_fs_defaultFS": "hdfs://namenode:8020"
+      "YARN_CONF_yarn_resourcemanager_hostname": "resourcemanager"
+      "YARN_CONF_yarn_nodemanager_aux___services": "mapreduce_shuffle"
+    command: ["yarn", "nodemanager"]
+
+  sqoop:
+    image: psyoblade/data-engineer-sqoop:2.1
+    container_name: sqoop
+    hostname: sqoop
+    restart: on-failure
+    command: ["tail", "-f", "/dev/null"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      namenode:
+        condition: service_started
+    # Mount the Postgres JDBC driver into Sqoop's lib directory:
+    volumes:
+      - ${POSTGRES_JDBC_JAR:-./postgresql-42.7.12.jar}:/usr/local/sqoop/lib/postgresql-42.7.12.jar
