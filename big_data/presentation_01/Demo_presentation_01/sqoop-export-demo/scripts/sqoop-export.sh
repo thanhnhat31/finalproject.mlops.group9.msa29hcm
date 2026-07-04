@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 set -e
 
-DB_URL="jdbc:postgresql://postgres:5432/sqoop_demo"
+DB_URL="jdbc:postgresql://pg-sqoop-demo:5432/sqoop_demo"
 DB_USER="postgres"
-DB_PASSWORD="123456"
+DB_PASSWORD="p@ssw0rd"
 TABLE_NAME="students_export"
 HDFS_EXPORT_DIR="/user/root/export_demo"
 CLASS_NAME="StudentsExport"
 
-echo "Cleaning PostgreSQL target table..."
+echo "======================================"
+echo "    BẮT ĐẦU DEMO SQOOP EXPORT"
+echo "======================================"
+echo "Làm sạch bảng đích trong PostgreSQL..."
 
 sqoop eval \
 --connect "$DB_URL" \
@@ -17,7 +20,7 @@ sqoop eval \
 --driver org.postgresql.Driver \
 --query "TRUNCATE TABLE $TABLE_NAME"
 
-echo "Generating Sqoop ORM class and JAR..."
+echo "Đang tạo Java class cho Sqoop ORM..."
 
 rm -rf /root/libjars /tmp/sqoop-src
 mkdir -p /root/libjars /tmp/sqoop-src
@@ -37,7 +40,7 @@ cp /root/libjars/${CLASS_NAME}.jar /opt/sqoop/lib/${CLASS_NAME}.jar
 export HADOOP_CLASSPATH="/root/libjars/${CLASS_NAME}.jar:/opt/sqoop/lib/${CLASS_NAME}.jar:/opt/sqoop/lib/*:$HADOOP_CLASSPATH"
 export CLASSPATH="/root/libjars/${CLASS_NAME}.jar:/opt/sqoop/lib/${CLASS_NAME}.jar:/opt/sqoop/lib/*:$CLASSPATH"
 
-echo "Running Sqoop Export..."
+echo "Bắt đầu tiến trình Sqoop Export..."
 
 sqoop export \
 -D mapreduce.job.user.classpath.first=true \
@@ -53,6 +56,6 @@ sqoop export \
 --jar-file /root/libjars/${CLASS_NAME}.jar \
 --m 1
 
-echo "Sqoop Export completed."
-echo "Check PostgreSQL with:"
-echo "SELECT * FROM students_export;"
+echo "======================================"
+echo "    SQOOP EXPORT HOÀN TẤT!"
+echo "======================================"

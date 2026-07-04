@@ -18,7 +18,7 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu focal universe" >> /etc/apt/sourc
     libcommons-lang-java \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -L https://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz \
+RUN curl -L https://repo.huaweicloud.com/apache/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz \
     -o /tmp/hadoop.tar.gz \
     && tar -xzf /tmp/hadoop.tar.gz -C /opt \
     && ln -s /opt/hadoop-${HADOOP_VERSION} /opt/hadoop \
