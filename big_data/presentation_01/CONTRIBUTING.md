@@ -13,6 +13,6 @@
 | No  | Task                                 | Assignee | Status |
 | --- | ------------------------------------ | -------- | ------ |
 | 1   | Introduction of Apache Sqoop         | Thanh    | Done   |
-| 2   | Operating Principle                  | Như      | Done   |
-| 3   | Demo (Import)                        | Tuấn     | Done   |
-| 4   | Demo (Export)                        | Nhật     | Done   |
+| 2   | Operating Principle of Apache Sqoop  | Như      | Done   |
+| 3   | Apache Sqoop Demo (Import)           | Tuấn     | Done   |
+| 4   | Apache Sqoop Demo (Export)           | Nhật     | Done   |

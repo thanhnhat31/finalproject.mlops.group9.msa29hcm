@@ -10,10 +10,13 @@ This is the demo source code of using Apache Sqoop to import/export data between
 
 ## 3. Quick Start
 
+### 3.1. Import Demo
 
+- Check sqoop-import-demo\README.md
 
+### 3.2. Export Demo
 
-
+- Check sqoop-export-demo\README.md
 
 ## 4. Documentation Index
 - Team process and roles: `CONTRIBUTING.md`

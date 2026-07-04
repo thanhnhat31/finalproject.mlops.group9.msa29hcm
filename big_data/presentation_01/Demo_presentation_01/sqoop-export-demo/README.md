@@ -32,7 +32,9 @@ sqoop-export-demo/
 │   └── sqoop-export.sh
 ```
 
-## 1. Start containers
+## Quick Start
+
+### 1. Start containers
 
 ```bash
 docker compose up -d --build
@@ -51,13 +53,13 @@ pg-sqoop-demo
 hadoop-sqoop
 ```
 
-## 2. Enter Hadoop/Sqoop container
+### 2. Enter Hadoop/Sqoop container
 
 ```bash
 docker exec -it hadoop-sqoop bash
 ```
 
-## 3. Start HDFS
+### 3. Start HDFS
 
 Inside the `hadoop-sqoop` container, run:
 
@@ -73,7 +75,7 @@ DataNode
 Jps
 ```
 
-## 4. Prepare source data in HDFS
+### 4. Prepare source data in HDFS
 
 ```bash
 /root/scripts/prepare-hdfs-data.sh
@@ -93,7 +95,7 @@ Sample data:
 3,Le Van C,Computer Science,3.20
 ```
 
-## 5. Run Sqoop Export
+### 5. Run Sqoop Export
 
 ```bash
 /root/scripts/sqoop-export.sh
@@ -105,7 +107,7 @@ This command exports data from HDFS to PostgreSQL table:
 students_export
 ```
 
-## 6. Verify result in PostgreSQL
+### 6. Verify result in PostgreSQL
 
 Open another terminal and run:
 
