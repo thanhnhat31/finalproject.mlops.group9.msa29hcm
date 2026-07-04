@@ -1,17 +1,23 @@
-# BIG DATA - PRESENTATION 01
+# BIG DATA - PRESENTATION 01 - GROUP 3
 
-## Overview
+## 1. Overview
 This is the demo source code of using Apache Sqoop to import/export data between RDBMS (PostgtreSQL) and Hadoop system.
 
-## Scope
+## 2. Key Features
 - Deploy containers of Hadoop and PostgreSQL using Docker.
 - Import data from PostgreSQL to HDFS
 - Export data from HDFS to PostgreSQL.
 
-## Group Info
-- Group name: Group 3
-- Group member:
-    - Hồ Nhật Thanh
-    - Bùi Nguyễn Trúc Như
-    - Nguyễn Văn Nhật
-    - Nguyễn Trần Minh Tuấn
+## 3. Quick Start
+
+
+
+
+
+
+## 4. Documentation Index
+- Team process and roles: `CONTRIBUTING.md`
+
+
+
+
